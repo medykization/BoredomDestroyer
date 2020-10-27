@@ -11,10 +11,10 @@ app.post('/login', (req, res) => {
 })
 
 app.get('/user', (req, res) => {
-    const user = [{login: pawel, password: 1234}]
+    const user = [{login: 'pawel', password: 1234}]
     res.json(user)
 })
 
 app.get('/', (req, res) => {
-    console.log('hello world')
+    res.send('hello world')
 })
