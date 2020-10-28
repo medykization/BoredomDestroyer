@@ -12,7 +12,7 @@ class SplashScreen extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Colors.blueAccent, Colors.blueAccent.shade100],
+                colors: [Colors.blue.shade800, Colors.lightBlueAccent.shade100],
               ),
             ),
           ),
@@ -24,20 +24,36 @@ class SplashScreen extends StatelessWidget {
                 child: new Text(
                   'Boredom',
                   style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 40,
-                      fontFamily: 'Pacifico',
-                      color: Colors.white70),
+                    fontWeight: FontWeight.normal,
+                    fontSize: 40,
+                    fontFamily: 'Pacifico',
+                    color: Colors.white70,
+                    shadows: <Shadow>[
+                      Shadow(
+                        offset: Offset(5.0, 5.0),
+                        blurRadius: 8.0,
+                        color: Colors.black26,
+                      )
+                    ],
+                  ),
                 ),
               ),
               Container(
                 child: new Text(
                   'Destroyer',
                   style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 40,
-                      fontFamily: 'Pacifico',
-                      color: Colors.white70),
+                    fontWeight: FontWeight.normal,
+                    fontSize: 40,
+                    fontFamily: 'Pacifico',
+                    color: Colors.white70,
+                    shadows: <Shadow>[
+                      Shadow(
+                        offset: Offset(5.0, 5.0),
+                        blurRadius: 8.0,
+                        color: Colors.black26,
+                      )
+                    ],
+                  ),
                 ),
               )
             ],
