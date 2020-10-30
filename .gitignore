@@ -412,4 +412,7 @@ fabric.properties
 
 !/gradle/wrapper/gradle-wrapper.jar
 
+# rest file
+*.rest
+
 # End of https://www.toptal.com/developers/gitignore/api/flutter,node,dart,android,androidstudio,visualstudiocode

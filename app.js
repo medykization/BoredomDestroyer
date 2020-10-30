@@ -5,6 +5,18 @@ const app = express();
 const port = process.env.PORT || 3000
 app.use(express.json())
 
+const users = [
+    {
+        name: 'leon'
+    },
+    {
+        name: 'michal'
+    },
+    {
+        name: 'kuba'
+    }
+]
+
 const userinfos = [
     {
         name: 'leon',
@@ -20,9 +32,11 @@ app.listen(port, () => console.log("Server is running"))
 
 app.post('/login', (req, res) => {
     const username = req.body.name
-    const user = {name: username}
-    const accessToken = jwt.sign(user, process.env.ACCES_TOKEN_SECRET);
-    res.json({accessToken: accessToken})
+    if(users.find(user => user.name === username)) {
+        const user = {name: username}
+        const accessToken = jwt.sign(user, process.env.ACCES_TOKEN_SECRET);
+        res.json({accessToken: accessToken})
+    }
 })
 
 function authenticateToken(req, res, next) {
@@ -41,7 +55,7 @@ function authenticateToken(req, res, next) {
 }
 
 app.get('/userinfo', authenticateToken , (req, res) => {
-    res.json(userinfos.filter(userinfo => userinfo.username === req.userinfo.username))
+    res.json(userinfos.filter(userinfo => userinfo.name === req.user.name))
 })
 
 app.get('/', (req, res) => {
