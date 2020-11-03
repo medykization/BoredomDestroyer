@@ -24,7 +24,7 @@ void main() {
 }
 
 class Application extends StatefulWidget {
-  // This widget is the root of your application.
+  // This widget is the root of application.
   _AppState createState() => _AppState();
 }
 
