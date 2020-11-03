@@ -90,17 +90,11 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildForgetPasswButton() {
-    return FlatButton(
-        onPressed: () {
-          // TO DO: Forget Password Button
-        },
-        child: Text('Forgot Password'));
-  }
-
   Widget _buildForgetPasswordButton() {
     return FlatButton(
-      onPressed: () {},
+      onPressed: () {
+        // TO DO: Forget Password Button
+      },
       child: Text(
         'Forgot Password?',
         textAlign: TextAlign.right,
