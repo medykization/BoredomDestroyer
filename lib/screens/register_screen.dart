@@ -9,6 +9,7 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   String username, password;
+  bool checkBoxValue = false;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             _buildUsernameRow(),
             _buildEmailRow(),
             _buildPasswordRow(),
+            _buildCheckBox(),
             _buildSignUpButton(),
+            _buildSignInContainer(),
           ],
         ),
       ),
@@ -109,9 +112,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+  Widget _buildCheckBox() {
+    return Padding(
+      padding: EdgeInsets.only(left: 60, top: 15),
+      child: Row(
+        children: [
+          Checkbox(
+            value: checkBoxValue,
+            onChanged: (bool value) {
+              setState(() {
+                checkBoxValue = value;
+              });
+            },
+          ),
+          Text(
+              "By signing up I accept the Terms Of\nService and Privacy Policy")
+        ],
+      ),
+    );
+  }
+
   Widget _buildSignUpButton() {
     return Padding(
-      padding: EdgeInsets.only(left: 60, right: 60, top: 10),
+      padding: EdgeInsets.only(left: 60, right: 60, top: 15),
       child: ButtonTheme(
         shape: new RoundedRectangleBorder(
             borderRadius: new BorderRadius.circular(10)),
@@ -127,6 +150,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
           color: Colors.blueAccent,
         ),
+      ),
+    );
+  }
+
+  Widget _buildSignInContainer() {
+    return Padding(
+      padding: EdgeInsets.only(top: 75),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("Already have an account? "),
+          TextButton(
+            child: Text(
+              "Sign In!",
+              style: TextStyle(color: Colors.blue),
+            ),
+            onPressed: () {
+              // TO DO: Navigate to Sign In Screen
+            },
+          )
+        ],
       ),
     );
   }
