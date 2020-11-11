@@ -31,6 +31,7 @@ const userinfos = [
 
 router.post('/login' ,(req, res) => {
     const requser = req.body
+    //check for user in database
     if( users.find(user => user.name === requser.name
          && user.password === requser.password)) {
         const user = {name: requser.name, password: requser.password}
@@ -50,6 +51,7 @@ router.post('/registration' ,(req, res) => {
     }
     else {
         const user = {name: requser.name, password: requser.password}
+        //add user to database
         users.push(user)
         const accessToken = jwt.sign(user, process.env.ACCES_TOKEN_SECRET);
         res.json({accessToken: accessToken})
