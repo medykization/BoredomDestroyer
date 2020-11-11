@@ -4,6 +4,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_project/screens/splash_screen.dart';
 import 'dart:async';
 
+/*
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: PlaceScreen(),
+    );
+  }
+}
+*/
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
