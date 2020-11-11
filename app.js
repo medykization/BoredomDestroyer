@@ -1,43 +1,14 @@
 require("dotenv").config();
 const express = require('express');
-const jwt = require('jsonwebtoken');
 const app = express();
-const port = process.env.PORT || 3000
-app.use(express.json())
+const port = process.env.PORT || 3000;
+const authentication = require("./routes/authentication"); 
+app.use(express.json());
 
-const users = [
-    {
-        name: 'leon'
-    },
-    {
-        name: 'michal'
-    },
-    {
-        name: 'kuba'
-    }
-]
 
-const userinfos = [
-    {
-        name: 'leon',
-        info: "info leona"
-    },
-    {
-        name: 'michal',
-        info: "info michala"
-    }
-]
+app.listen(port, () => console.log("Server is running"));
 
-app.listen(port, () => console.log("Server is running"))
-
-app.post('/login', (req, res) => {
-    const username = req.body.name
-    if(users.find(user => user.name === username)) {
-        const user = {name: username}
-        const accessToken = jwt.sign(user, process.env.ACCES_TOKEN_SECRET);
-        res.json({accessToken: accessToken})
-    }
-})
+app.use("/authentication", authentication);
 
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization']
@@ -52,12 +23,8 @@ function authenticateToken(req, res, next) {
         req.user = user
         next()
     })
-}
-
-app.get('/userinfo', authenticateToken , (req, res) => {
-    res.json(userinfos.filter(userinfo => userinfo.name === req.user.name))
-})
+};
 
 app.get('/', (req, res) => {
     res.send('hello world')
-})
+});
