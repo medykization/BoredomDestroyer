@@ -1,46 +1,28 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 let router = express.Router();
+const db = require('../models/db')
 
-
-const users = [
-    {
-        name: 'leon',
-        password: '1234'
-    },
-    {
-        name: 'michal',
-        password: '1234'
-    },
-    {
-        name: 'kuba',
-        password: '1234'
-    }
-];
-
-const userinfos = [
-    {
-        name: 'leon',
-        info: "info leona"
-    },
-    {
-        name: 'michal',
-        info: "info michala"
-    }
-];
+const users = [];
 
 router.post('/login' ,(req, res) => {
     const requser = req.body
     //check for user in database
-    if( users.find(user => user.name === requser.name
-         && user.password === requser.password)) {
-        const user = {name: requser.name, password: requser.password}
-        const accessToken = jwt.sign(user, process.env.ACCES_TOKEN_SECRET);
-        res.json({accessToken: accessToken})
-    }
-    else {
-        res.sendStatus(400)
-    }
+    
+    var check = db.checkUser(requser.name,requser.password);
+
+    check.then(function(result){
+
+        console.log(result != null);
+        if(result != null) {
+            const user = {name: requser.name, password: requser.password}
+            const accessToken = jwt.sign(user, process.env.ACCES_TOKEN_SECRET);
+            res.json({accessToken: accessToken})
+        }
+        else {
+            res.sendStatus(400)
+        }
+    })
 });
 
 router.post('/registration' ,(req, res) => {
