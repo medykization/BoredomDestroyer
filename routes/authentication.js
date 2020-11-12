@@ -2,7 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 let router = express.Router();
 const db = require('../models/db')
-require('../middleware/user_exist')
+const exist = require('../middleware/user_exist')
 
 const users = [];
 
@@ -24,7 +24,7 @@ router.post('/login' ,(req, res) => {
     })
 });
 
-router.post('/registration', checkIfUserExist, (req, res) => {
+router.post('/registration', exist.checkIfUserExist, (req, res) => {
     const requser = req.body
 
     var insertUser = db.insertUser(requser.name, requser.email, requser.password)
