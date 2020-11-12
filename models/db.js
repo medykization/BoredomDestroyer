@@ -8,7 +8,6 @@ async function checkUser(username, password) {
         const results = { 'results': (result) ? result.rows : null};
 
         if(result.rows[0] != null){
-            //console.log(result.rows[0]);
             client.release();
             return results;
         }
@@ -21,4 +20,47 @@ async function checkUser(username, password) {
     }
 };
 
+async function checkValueInColumn(collumn_name, value) {
+    try {
+        const client = await pool.connect();
+        const selectQuery = 'SELECT *  FROM $1 WHERE $1 = $2 ';
+        const result = await client.query(selectQuery, [collumn_name, value]);
+        const results = { 'results': (result) ? result.rows : null};
+
+        if(result.rows[0] != null){
+            return results;
+        }
+        else{
+            return null;
+        }
+
+    }catch (err) {
+        return null;
+    }finally{
+        client.release();
+    }
+};
+
+async function insertUser(username, email, password) {
+    try {
+        const client = await pool.connect();
+        const selectQuery = 'INSERT INTO users(user_name ,user_email, user_pass) VALUES ($1, $2, $3) ';
+        const result = await client.query(selectQuery, [username, email, password]);
+        const results = { 'results': (result) ? result.rows : null};
+
+        if(result.rows[0] != null){
+            return results;
+        }
+        else{
+            return null;
+        }
+    }catch (err) {
+        return null;
+    }finally{
+        client.release();
+    }
+};
+
 exports.checkUser = checkUser
+exports.checkValueInColumn = checkValueInColumn
+exports.insertUser = insertUser
