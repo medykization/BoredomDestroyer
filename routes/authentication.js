@@ -2,6 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 let router = express.Router();
 const db = require('../models/db')
+require('../middleware/user_exist')
 
 const users = [];
 
@@ -23,33 +24,9 @@ router.post('/login' ,(req, res) => {
     })
 });
 
-router.post('/registration',(req, res) => {
+router.post('/registration', checkIfUserExist, (req, res) => {
     const requser = req.body
 
-    var flag = true;
-
-    var checkEmail = db.checkEmail(requser.email);
-    checkEmail.then(function(result){
-        if(result != null){
-            console.log("dupaEMAIL");
-            flag = false;
-        }
-    })
-
-    
-    var checkName = db.checkName(requser.name);
-    checkName.then(function(result){
-        if(result != null){
-            console.log("dupaNAME");
-            flag = false;
-        }
-    })
-    
-    if(flag == false){
-        res.sendStatus(409);
-        return;
-    }
-   
     var insertUser = db.insertUser(requser.name, requser.email, requser.password)
     insertUser.then(function(result){
         console.log(result.results);
