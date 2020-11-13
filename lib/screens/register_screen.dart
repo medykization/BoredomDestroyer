@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project/screens/login_screen.dart';
 import 'elements/rounded_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -168,10 +169,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
               style: TextStyle(color: Colors.blue),
             ),
             onPressed: () {
-              // TO DO: Navigate to Sign In Screen
+              navigateTo(LoginScreen(), 200);
             },
           )
         ],
+      ),
+    );
+  }
+
+  void navigateTo(Widget screen, int animationTime) {
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        transitionDuration: Duration(milliseconds: animationTime),
+        transitionsBuilder: (context, animation, animationTime, child) {
+          return ScaleTransition(
+            alignment: Alignment.center,
+            scale: animation,
+            child: child,
+          );
+        },
+        pageBuilder: (context, animation, animationTime) {
+          return screen;
+        },
       ),
     );
   }

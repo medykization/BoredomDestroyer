@@ -143,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
               User user = new User(username, token);
               print("Logged in as " + user.getName());
               //TO DO: Add user to shared prefs
-              navigateTo(MainScreen());
+              navigateTo(MainScreen(), 200);
             } else {
               print("\nCan't log in");
             }
@@ -220,7 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
               style: TextStyle(color: Colors.blue),
             ),
             onPressed: () {
-              navigateTo(RegisterScreen());
+              navigateTo(RegisterScreen(), 200);
             },
           )
         ],
@@ -228,11 +228,11 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void navigateTo(Widget screen) {
+  void navigateTo(Widget screen, int animationTime) {
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
-        transitionDuration: Duration(milliseconds: 150),
+        transitionDuration: Duration(milliseconds: animationTime),
         transitionsBuilder: (context, animation, animationTime, child) {
           return ScaleTransition(
             alignment: Alignment.center,
