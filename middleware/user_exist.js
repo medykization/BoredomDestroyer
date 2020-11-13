@@ -1,29 +1,31 @@
 const db = require('../models/db')
 
-function checkIfUserExist(req, res, next) {
+function checkIfEmailExist(req, res, next) {
     const requser = req.body
 
-    var flag = true;
-
     var checkEmail = db.checkEmail(requser.email);
-    var checkName = db.checkName(requser.name);
     checkEmail.then(function(result){
         if(result != null){
             console.log("dupaEMAIL");
-            flag = false;
+            return res.sendStatus(409);
         }
-    }).checkName.then(function(result){
-        if(result != null){
-            console.log("dupaNAME");
-            flag = false;
-        }
+        next();
     })
-
-    if(flag == false){
-        return res.sendStatus(409);
-    }
-
-    next();
 };
 
-exports.checkIfUserExist = checkIfUserExist
+function checkIfNameExist(req, res, next) {
+    const requser = req.body
+
+    var checkName = db.checkName(requser.name); 
+    checkName.then(function(result){
+        if(result != null){
+            console.log("dupaNAME");
+            return res.sendStatus(409);
+        }
+        next();
+    })
+};
+
+
+exports.checkIfEmailExist = checkIfEmailExist
+exports.checkIfNameExist = checkIfNameExist

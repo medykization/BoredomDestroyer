@@ -8,8 +8,6 @@ const users = [];
 
 router.post('/login' ,(req, res) => {
     const requser = req.body
-    //check for user in database
-    
     var check = db.checkUser(requser.name,requser.password);
 
     check.then(function(result){
@@ -24,14 +22,15 @@ router.post('/login' ,(req, res) => {
     })
 });
 
-router.post('/registration', exist.checkIfUserExist, (req, res) => {
+
+router.post('/registration', exist.checkIfEmailExist, exist.checkIfNameExist, (req, res) => {
     const requser = req.body
 
     var insertUser = db.insertUser(requser.name, requser.email, requser.password)
     insertUser.then(function(result){
         console.log(result.results);
         if(result == null)
-            res.sendStatus(409);
+            return res.sendStatus(409);
         else{
             const user = {name: requser.name, password: requser.password}
             const accessToken = jwt.sign(user, process.env.ACCES_TOKEN_SECRET);
