@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_project/models/user.dart';
 import 'elements/rounded_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_project/API/httpAuth.dart';
+import 'package:flutter_project/API/Auth.dart';
 
 import 'main_screen.dart';
 import 'register_screen.dart';
@@ -115,18 +115,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Future<String> signIn() async {
-    String data;
-    await httpAuth.signIn(username, password).then(
-          (val) => setState(
-            () {
-              data = val;
-            },
-          ),
-        );
-    return data;
-  }
-
   Widget _buildSignInButton() {
     return Padding(
       padding: EdgeInsets.only(left: 60, right: 60, top: 10),
@@ -138,7 +126,6 @@ class _LoginScreenState extends State<LoginScreen> {
         child: FlatButton(
           onPressed: () async {
             String token = await signIn();
-            //String token = null;
             if (token != null) {
               User user = new User(username, token);
               print("Logged in as " + user.getName());
@@ -226,6 +213,18 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
     );
+  }
+
+  Future<String> signIn() async {
+    String data;
+    await httpAuth.signIn(username, password).then(
+          (val) => setState(
+            () {
+              data = val;
+            },
+          ),
+        );
+    return data;
   }
 
   void navigateTo(Widget screen, int animationTime) {

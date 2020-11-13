@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/screens/login_screen.dart';
+import 'package:flutter_project/screens/main_screen.dart';
 import 'elements/rounded_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_project/API/Auth.dart';
+import 'package:flutter_project/models/user.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -9,8 +12,10 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  String username, password;
+  String username, password, email;
   bool checkBoxValue = false;
+
+  HttpAuth httpAuth = new HttpAuth();
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +89,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       child: TextFormField(
         keyboardType: TextInputType.emailAddress,
         onChanged: (value) {
-          username = value;
+          email = value;
         },
         decoration: InputDecoration(
             prefixIcon:
@@ -142,8 +147,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
         minWidth: 500.0,
         height: 50.0,
         child: FlatButton(
-          onPressed: () {
-            //TO DO: Sign Up Button
+          onPressed: () async {
+            if (checkBoxValue == true &&
+                validatePassword() &&
+                validateEmail() &&
+                validateUsename()) {
+              String token = await signIn();
+              if (token != null) {
+                User user = new User(username, token);
+                print(user.getName());
+                //TO DO: Add user to shared prefs
+                navigateTo(MainScreen(), 200);
+              } else {
+                print("\nCan't create account");
+              }
+            } else {
+              print("Please accept terms");
+            }
           },
           child: Text(
             'SIGN UP',
@@ -177,6 +197,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+  Future<String> signIn() async {
+    String data;
+    await httpAuth.signUp(username, email, password).then(
+          (val) => setState(
+            () {
+              data = val;
+            },
+          ),
+        );
+    return data;
+  }
+
   void navigateTo(Widget screen, int animationTime) {
     Navigator.pushReplacement(
       context,
@@ -194,5 +226,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
         },
       ),
     );
+  }
+
+  bool validatePassword() {
+    // TO DO
+    return password != null;
+  }
+
+  bool validateUsename() {
+    // TO DO
+    return username != null;
+  }
+
+  bool validateEmail() {
+    // TO DO
+    return email != null;
   }
 }
