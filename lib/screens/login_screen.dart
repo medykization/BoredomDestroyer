@@ -1,10 +1,11 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_project/models/user.dart';
 import 'elements/rounded_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_project/models/httpAuth.dart';
+import 'package:flutter_project/API/httpAuth.dart';
+
+import 'main_screen.dart';
+import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -137,14 +138,12 @@ class _LoginScreenState extends State<LoginScreen> {
         child: FlatButton(
           onPressed: () async {
             String token = await signIn();
-
+            //String token = null;
             if (token != null) {
               User user = new User(username, token);
+              print("Logged in as " + user.getName());
               //TO DO: Add user to shared prefs
-              print("Logged in as " +
-                  user.getName() +
-                  "\nwith token: " +
-                  user.getToken());
+              navigateTo(MainScreen());
             } else {
               print("\nCan't log in");
             }
@@ -221,10 +220,29 @@ class _LoginScreenState extends State<LoginScreen> {
               style: TextStyle(color: Colors.blue),
             ),
             onPressed: () {
-              // TO DO: Create Account
+              navigateTo(RegisterScreen());
             },
           )
         ],
+      ),
+    );
+  }
+
+  void navigateTo(Widget screen) {
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        transitionDuration: Duration(milliseconds: 150),
+        transitionsBuilder: (context, animation, animationTime, child) {
+          return ScaleTransition(
+            alignment: Alignment.center,
+            scale: animation,
+            child: child,
+          );
+        },
+        pageBuilder: (context, animation, animationTime) {
+          return screen;
+        },
       ),
     );
   }
