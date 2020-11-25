@@ -2,10 +2,7 @@ class User {
   String name;
   String token;
 
-  User(String name, String token) {
-    this.name = name;
-    this.token = token;
-  }
+  User({this.name, this.token});
 
   String getName() {
     return name;
