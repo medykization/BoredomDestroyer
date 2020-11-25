@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_project/models/place.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
-import 'elements/rounded_app_bar.dart';
-import 'package:easy_permission_validator/easy_permission_validator.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_project/API/places.dart';
 
