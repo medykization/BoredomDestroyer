@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_project/models/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'elements/rounded_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_project/API/Auth.dart';
@@ -121,10 +121,9 @@ class _LoginScreenState extends State<LoginScreen> {
         child: FlatButton(
           onPressed: () async {
             String token = await signIn();
+
             if (token != null) {
-              User user = new User(username, token);
-              print("Logged in as " + user.getName());
-              //TO DO: Add user to shared prefs
+              _addUserDataToSF(token);
               navigateTo(MainScreen(), 200);
             } else {
               print("\nCan't log in");
@@ -237,4 +236,11 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+  _addUserDataToSF(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('username', username);
+    prefs.setString('token', token);
+  }
+  // Use prefs.getString('username') to get data
 }
