@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: new Center(
         child: Column(
           children: <Widget>[
-            Expanded(flex: 2, child: _buildWelcomeTextRow()),
+            Expanded(flex: 3, child: _buildWelcomeTextRow()),
             _buildUsernameRow(),
             _buildPasswordRow(),
             _buildForgetPasswordButton(),
