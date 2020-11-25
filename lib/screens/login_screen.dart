@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'elements/rounded_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_project/API/Auth.dart';
+import 'package:flutter_project/API/auth.dart';
 
 import 'main_screen.dart';
 import 'register_screen.dart';
@@ -123,7 +123,13 @@ class _LoginScreenState extends State<LoginScreen> {
             String token = await signIn();
 
             if (token != null) {
+<<<<<<< HEAD
               _addUserDataToSF(token);
+=======
+              User user = new User(name: username, token: token);
+              print("Logged in as " + user.getName());
+              //TO DO: Add user to shared prefs
+>>>>>>> 0f7b41fa9a8cfe6b1fb399a5ea2279caffdf4fed
               navigateTo(MainScreen(), 200);
             } else {
               print("\nCan't log in");

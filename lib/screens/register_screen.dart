@@ -3,7 +3,7 @@ import 'package:flutter_project/screens/login_screen.dart';
 import 'package:flutter_project/screens/main_screen.dart';
 import 'elements/rounded_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_project/API/Auth.dart';
+import 'package:flutter_project/API/auth.dart';
 import 'package:flutter_project/models/user.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -153,7 +153,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 validateUsename()) {
               String token = await signIn();
               if (token != null) {
-                User user = new User(username, token);
+                User user = new User(name: username, token: token);
                 print(user.getName());
                 //TO DO: Add user to shared prefs
                 navigateTo(MainScreen(), 200);
