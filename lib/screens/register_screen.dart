@@ -22,7 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return new Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100),
+        preferredSize: Size.fromHeight(80),
         child: CustomPaint(
           size: Size(800, 150),
           painter: RoundedAppBar(),
@@ -31,13 +31,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: new Center(
         child: Column(
           children: <Widget>[
-            _buildWelcomeTextRow(),
+            Expanded(flex: 2, child: _buildWelcomeTextRow()),
             _buildUsernameRow(),
             _buildEmailRow(),
             _buildPasswordRow(),
             _buildCheckBox(),
             _buildSignUpButton(),
-            _buildSignInContainer(),
+            Expanded(flex: 1, child: _buildSignInContainer()),
           ],
         ),
       ),
@@ -45,26 +45,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildWelcomeTextRow() {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 40, top: 80),
-      child: Column(
-        children: [
-          Container(
-            child: new Text(
-              'Quick and Easy',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 34),
-            ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          child: new Text(
+            'Quick and Easy',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 34),
           ),
-          Container(
-            child: new Text(
-              'Sign Up',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20),
-            ),
+        ),
+        Container(
+          child: new Text(
+            'Sign Up',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -176,8 +175,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildSignInContainer() {
-    return Padding(
-      padding: EdgeInsets.only(top: 75),
+    return Container(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,

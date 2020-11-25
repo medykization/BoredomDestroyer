@@ -21,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return new Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100),
+        preferredSize: Size.fromHeight(80),
         child: CustomPaint(
           size: Size(800, 150),
           painter: RoundedAppBar(),
@@ -30,14 +30,14 @@ class _LoginScreenState extends State<LoginScreen> {
       body: new Center(
         child: Column(
           children: <Widget>[
-            _buildWelcomeTextRow(),
+            Expanded(flex: 2, child: _buildWelcomeTextRow()),
             _buildUsernameRow(),
             _buildPasswordRow(),
             _buildForgetPasswordButton(),
             _buildSignInButton(),
             _buildOrContainer(),
             _buildAuthButtons(),
-            _buildCreateAccountContainer()
+            Expanded(flex: 1, child: _buildCreateAccountContainer())
           ],
         ),
       ),
@@ -45,26 +45,21 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildWelcomeTextRow() {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 40, top: 110),
-      child: Column(
-        children: [
-          Container(
-            child: new Text(
-              'Welcome!',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 34),
-            ),
-          ),
-          Container(
-            child: new Text(
-              'Sign In to continue',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20),
-            ),
-          ),
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        new Text(
+          'Welcome!',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 34),
+        ),
+        new Text(
+          'Sign In to continue',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20),
+        ),
+      ],
     );
   }
 
@@ -147,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildOrContainer() {
     return Padding(
-      padding: EdgeInsets.only(top: 30),
+      padding: EdgeInsets.only(top: 30, bottom: 20),
       child: Text(
         'OR',
         style: TextStyle(color: Colors.black54, fontSize: 20),
@@ -157,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildAuthButtons() {
     return Padding(
-      padding: EdgeInsets.only(top: 20),
+      padding: EdgeInsets.only(bottom: 10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -194,24 +189,21 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildCreateAccountContainer() {
-    return Padding(
-      padding: EdgeInsets.only(top: 25),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text("Don't have any account? "),
-          TextButton(
-            child: Text(
-              "Create New!",
-              style: TextStyle(color: Colors.blue),
-            ),
-            onPressed: () {
-              navigateTo(RegisterScreen(), 200);
-            },
-          )
-        ],
-      ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("Don't have any account? "),
+        TextButton(
+          child: Text(
+            "Create New!",
+            style: TextStyle(color: Colors.blue),
+          ),
+          onPressed: () {
+            navigateTo(RegisterScreen(), 200);
+          },
+        )
+      ],
     );
   }
 
