@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_project/screens/preferences_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -38,106 +39,109 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
-}
 
-// CATEGORY BAR
-Widget _buildCategoryBar(String categoryName, IconData categoryIcon) {
-  return Row(
-    children: [
-      Icon(categoryIcon, color: Colors.blueAccent),
-      SizedBox(width: 8),
-      Text(
-        'Account',
-        style: TextStyle(
-            color: Colors.blueAccent,
-            fontSize: 18,
-            fontWeight: FontWeight.bold),
-      ),
-    ],
-  );
-}
+  // CATEGORY BAR
+  Widget _buildCategoryBar(String categoryName, IconData categoryIcon) {
+    return Row(
+      children: [
+        Icon(categoryIcon, color: Colors.blueAccent),
+        SizedBox(width: 8),
+        Text(
+          'Account',
+          style: TextStyle(
+              color: Colors.blueAccent,
+              fontSize: 18,
+              fontWeight: FontWeight.bold),
+        ),
+      ],
+    );
+  }
 
 // ACCOUNT SETTINGS
 
-Widget _buildChangePasswordButton() {
-  return FlatButton(
-    onPressed: () {
-      print('Change Password Button');
-      // TO DO
-    },
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          'Change Password',
-          style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 16,
-              fontWeight: FontWeight.bold),
-        ),
-        Icon(
-          Icons.arrow_forward_ios,
-          color: Colors.grey[600],
-          size: 20.0,
-        )
-      ],
-    ),
-  );
-}
+  Widget _buildChangePasswordButton() {
+    return FlatButton(
+      onPressed: () {
+        print('Change Password Button');
+        // TO DO
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Change Password',
+            style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 16,
+                fontWeight: FontWeight.bold),
+          ),
+          Icon(
+            Icons.arrow_forward_ios,
+            color: Colors.grey[600],
+            size: 20.0,
+          )
+        ],
+      ),
+    );
+  }
 
-Widget _buildPreferencesButton() {
-  return FlatButton(
-    onPressed: () {
-      print('Preferences Button');
-      // TO DO
-    },
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          'Preferences',
-          style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 16,
-              fontWeight: FontWeight.bold),
-        ),
-        Icon(
-          Icons.arrow_forward_ios,
-          color: Colors.grey[600],
-          size: 20.0,
-        )
-      ],
-    ),
-  );
-}
+  Widget _buildPreferencesButton() {
+    return FlatButton(
+      onPressed: () {
+        //Navigate to Preferences Screen
+        Navigator.push(context,
+            MaterialPageRoute<bool>(builder: (BuildContext context) {
+          return PreferencesScreen();
+        }));
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Preferences',
+            style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 16,
+                fontWeight: FontWeight.bold),
+          ),
+          Icon(
+            Icons.arrow_forward_ios,
+            color: Colors.grey[600],
+            size: 20.0,
+          )
+        ],
+      ),
+    );
+  }
 
 // APP SETTINGS
 
-Widget _buildNotificationSwitch() {
-  return FlatButton(
-    onPressed: () {
-      print('Preferences Button');
-      // TO DO
-    },
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          'Notifications',
-          style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 16,
-              fontWeight: FontWeight.bold),
-        ),
-        Transform.scale(
-            child: CupertinoSwitch(
-              onChanged: (bool value) {
-                // TO DO
-              },
-              value: true,
-            ),
-            scale: 0.8)
-      ],
-    ),
-  );
+  Widget _buildNotificationSwitch() {
+    return FlatButton(
+      onPressed: () {
+        print('Preferences Button');
+        // TO DO
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Notifications',
+            style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 16,
+                fontWeight: FontWeight.bold),
+          ),
+          Transform.scale(
+              child: CupertinoSwitch(
+                onChanged: (bool value) {
+                  // TO DO
+                },
+                value: true,
+              ),
+              scale: 0.8)
+        ],
+      ),
+    );
+  }
 }
