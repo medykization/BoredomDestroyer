@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      backgroundColor: Colors.blueAccent,
       body: Stack(
         alignment: Alignment.center,
         children: [
@@ -11,6 +13,10 @@ class SplashScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Expanded(
+                flex: 4,
+                child: Container(),
+              ),
               Center(
                 child: new Text(
                   'Boredom',
@@ -18,7 +24,7 @@ class SplashScreen extends StatelessWidget {
                     fontWeight: FontWeight.normal,
                     fontSize: 40,
                     fontFamily: 'Pacifico',
-                    color: Colors.blueAccent,
+                    color: Colors.white70,
                     shadows: <Shadow>[
                       Shadow(
                         offset: Offset(5.0, 5.0),
@@ -36,7 +42,7 @@ class SplashScreen extends StatelessWidget {
                     fontWeight: FontWeight.normal,
                     fontSize: 40,
                     fontFamily: 'Pacifico',
-                    color: Colors.blueAccent,
+                    color: Colors.white70,
                     shadows: <Shadow>[
                       Shadow(
                         offset: Offset(5.0, 5.0),
@@ -46,7 +52,12 @@ class SplashScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-              )
+              ),
+              Expanded(
+                flex: 3,
+                child: Container(),
+              ),
+              Padding(padding: EdgeInsets.only(bottom: 50), child: spinkit),
             ],
           )
         ],
@@ -54,3 +65,8 @@ class SplashScreen extends StatelessWidget {
     );
   }
 }
+
+const spinkit = SpinKitCircle(
+  color: Colors.white70,
+  size: 30.0,
+);
