@@ -34,6 +34,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildCategoryBar('App', Icons.settings),
             Divider(height: 15, thickness: 2),
             _buildNotificationSwitch(),
+            SizedBox(height: 30),
+            _buildSignOutButton(),
           ],
         ),
       ),
@@ -141,6 +143,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               scale: 0.8)
         ],
+      ),
+    );
+  }
+
+  Widget _buildSignOutButton() {
+    return Center(
+      child: OutlineButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        onPressed: () {
+          print("Sign Out Button");
+          // TO DO
+        },
+        child: Text(
+          'Sign Out',
+          style: TextStyle(
+            fontSize: 16,
+            letterSpacing: 2.2,
+            color: Colors.black87,
+          ),
+        ),
       ),
     );
   }
