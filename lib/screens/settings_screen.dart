@@ -28,8 +28,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildAccountCategoryRow(),
             Divider(height: 15, thickness: 2),
             _buildChangePasswordButton(),
-            Divider(height: 15, thickness: 2),
             _buildPreferencesButton(),
+            SizedBox(height: 20),
+            _buildAppCategoryRow(),
+            Divider(height: 15, thickness: 2),
+            _buildNotificationSwitch(),
           ],
         ),
       ),
@@ -102,6 +105,53 @@ Widget _buildPreferencesButton() {
           color: Colors.grey[600],
           size: 20.0,
         )
+      ],
+    ),
+  );
+}
+
+// App
+
+Widget _buildAppCategoryRow() {
+  return Row(
+    children: [
+      Icon(Icons.settings, color: Colors.blueAccent),
+      SizedBox(width: 8),
+      Text(
+        'App',
+        style: TextStyle(
+            color: Colors.blueAccent,
+            fontSize: 18,
+            fontWeight: FontWeight.bold),
+      ),
+    ],
+  );
+}
+
+Widget _buildNotificationSwitch() {
+  return FlatButton(
+    onPressed: () {
+      print('Preferences Button');
+      // TO DO
+    },
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          'Notifications',
+          style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 16,
+              fontWeight: FontWeight.bold),
+        ),
+        Transform.scale(
+            child: CupertinoSwitch(
+              onChanged: (bool value) {
+                // TO DO
+              },
+              value: true,
+            ),
+            scale: 0.8)
       ],
     ),
   );
