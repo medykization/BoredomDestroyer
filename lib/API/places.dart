@@ -9,6 +9,9 @@ class PlacesApi {
   final GoogleDistanceMatrix matrix = new GoogleDistanceMatrix(
       apiKey: "AIzaSyDuNDK_ogM5AnrMqawuqZQYzDVXkVnE45I");
 
+  final photoLink =
+      "https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&maxheight=100&photoreference=";
+
   Future<List<Place>> getNearbyPlaces(
       int radius, Location location, Set<String> preferences) async {
     //origin varible to distance request
@@ -25,9 +28,13 @@ class PlacesApi {
         if (response.isOkay) {
           for (PlacesSearchResult next in response.results) {
             if (next.types.first == val) {
+              String photo = photoLink +
+                  next.photos.first.photoReference +
+                  "&key=AIzaSyDuNDK_ogM5AnrMqawuqZQYzDVXkVnE45I";
+
               Place place = new Place(
                   name: next.name,
-                  icon: next.icon,
+                  icon: photo,
                   location: next.geometry.location);
 
               //destination varible to distance request
