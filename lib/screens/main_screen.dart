@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/models/place.dart';
+import 'package:flutter_project/screens/settings_screen.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -53,7 +54,10 @@ class _MainScreenState extends State<MainScreen> {
           actions: [
             FlatButton(
                 onPressed: () {
-                  // TO DO
+                  Navigator.push(context,
+                      MaterialPageRoute<bool>(builder: (BuildContext context) {
+                    return SettingsScreen();
+                  }));
                 },
                 child: Icon(Icons.menu),
                 textColor: Colors.white),
