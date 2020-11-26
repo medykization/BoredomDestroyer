@@ -25,12 +25,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
           padding: EdgeInsets.symmetric(horizontal: 25),
           children: [
             SizedBox(height: 20),
-            _buildAccountCategoryRow(),
+            _buildCategoryBar('Account', Icons.person),
             Divider(height: 15, thickness: 2),
             _buildChangePasswordButton(),
             _buildPreferencesButton(),
             SizedBox(height: 20),
-            _buildAppCategoryRow(),
+            _buildCategoryBar('App', Icons.settings),
             Divider(height: 15, thickness: 2),
             _buildNotificationSwitch(),
           ],
@@ -40,12 +40,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 }
 
-// ACCOUNT
-
-Widget _buildAccountCategoryRow() {
+// CATEGORY BAR
+Widget _buildCategoryBar(String categoryName, IconData categoryIcon) {
   return Row(
     children: [
-      Icon(Icons.person, color: Colors.blueAccent),
+      Icon(categoryIcon, color: Colors.blueAccent),
       SizedBox(width: 8),
       Text(
         'Account',
@@ -57,6 +56,8 @@ Widget _buildAccountCategoryRow() {
     ],
   );
 }
+
+// ACCOUNT SETTINGS
 
 Widget _buildChangePasswordButton() {
   return FlatButton(
@@ -110,23 +111,7 @@ Widget _buildPreferencesButton() {
   );
 }
 
-// App
-
-Widget _buildAppCategoryRow() {
-  return Row(
-    children: [
-      Icon(Icons.settings, color: Colors.blueAccent),
-      SizedBox(width: 8),
-      Text(
-        'App',
-        style: TextStyle(
-            color: Colors.blueAccent,
-            fontSize: 18,
-            fontWeight: FontWeight.bold),
-      ),
-    ],
-  );
-}
+// APP SETTINGS
 
 Widget _buildNotificationSwitch() {
   return FlatButton(
