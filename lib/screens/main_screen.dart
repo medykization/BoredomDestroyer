@@ -17,7 +17,7 @@ List<Place> places;
 PlacesApi placesApi = new PlacesApi();
 
 Set<String> preferences = {
-  "movie_theater",
+  "restaurant",
   //"cafe",
 };
 
@@ -33,7 +33,7 @@ class _MainScreenState extends State<MainScreen> {
         desiredAccuracy: LocationAccuracy.high);
     if (position != null) {
       await placesApi
-          .getNearbyPlaces(500,
+          .getNearbyPlaces(2000,
               new Location(position.latitude, position.longitude), preferences)
           .then((val) => setState(() {
                 if (val != null) {
@@ -51,6 +51,7 @@ class _MainScreenState extends State<MainScreen> {
       child: new Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          toolbarHeight: 80,
           actions: [
             FlatButton(
                 onPressed: () {
@@ -92,23 +93,22 @@ class _MainScreenState extends State<MainScreen> {
               padding:
                   const EdgeInsets.symmetric(vertical: 2.0, horizontal: 20.0),
               child: Container(
-                child: Card(
-                  child: ListTile(
-                    title: Text(places[index].name),
-                    subtitle: Text("Distance: " + places[index].distance),
-                    tileColor: Colors.blueAccent,
-                    leading: ConstrainedBox(
+                  child: Card(
+                child: ListTile(
+                  title: Text(places[index].name),
+                  subtitle: Text("Distance: " + places[index].distance),
+                  tileColor: Colors.white,
+                  leading: ConstrainedBox(
                       constraints: BoxConstraints(
                         minHeight: 100,
                         minWidth: 100,
                         maxHeight: 100,
                         maxWidth: 100,
                       ),
-                      child: Image.network("${places[index].icon}")
-                  ),
+                      child: Image.network("${places[index].icon}")),
                 ),
-              ));
-    });
+              )));
+        });
   }
 
   ListView _buildEventsView(String choice) {
