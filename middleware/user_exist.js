@@ -1,4 +1,4 @@
-const db = require('../models/db')
+const db = require('../controller/db')
 
 function checkIfEmailExist(req, res, next) {
     const requser = req.body
