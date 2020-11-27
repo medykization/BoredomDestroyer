@@ -9,9 +9,8 @@ function checkIfEmailExist(req, res, next) {
             console.log("dupaEMAIL");
             return res.sendStatus(409);
         }
+        next();
     })
-
-    next();
 };
 
 function checkIfNameExist(req, res, next) {
@@ -23,9 +22,8 @@ function checkIfNameExist(req, res, next) {
             console.log("dupaNAME");
             return res.sendStatus(409);
         }
+        next();
     })
-
-    next();
 };
 
 

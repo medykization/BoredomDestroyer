@@ -21,6 +21,7 @@ router.post('/login',auth.authenticateToken,(req, res) => {
     })
 });
 
+
 router.post('/registration', exist.checkIfEmailExist, exist.checkIfNameExist, (req, res) => {
     const requser = req.body
 
