@@ -25,12 +25,18 @@ class PlacesApi {
             location, radius,
             type: val, language: "pl");
 
-        if (response.isOkay) {
+        if (response.isOkay && response.results.length > 0) {
           for (PlacesSearchResult next in response.results) {
             if (next.types.first == val) {
-              String photo = photoLink +
-                  next.photos.first.photoReference +
-                  "&key=AIzaSyDuNDK_ogM5AnrMqawuqZQYzDVXkVnE45I";
+              String photo;
+
+              if (next.photos != null) {
+                photo = photoLink +
+                    next.photos.first.photoReference +
+                    "&key=AIzaSyDuNDK_ogM5AnrMqawuqZQYzDVXkVnE45I";
+              } else {
+                photo = next.icon;
+              }
 
               Place place = new Place(
                   name: next.name,
@@ -61,7 +67,7 @@ class PlacesApi {
         origin, destination,
         travelMode: TravelMode.walking, unit: Unit.metric);
 
-    if (response.isOkay) {
+    if (response.isOkay && response.results.length > 0) {
       return response.results.first.elements.last.distance.text;
     }
     return "N/D";

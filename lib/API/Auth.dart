@@ -18,6 +18,8 @@ class HttpAuth {
           },
           body: body);
 
+      print(response.statusCode);
+
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
       String test = jsonResponse['accessToken'];
 
