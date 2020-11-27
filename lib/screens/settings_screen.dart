@@ -49,7 +49,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         Icon(categoryIcon, color: Colors.blueAccent),
         SizedBox(width: 8),
         Text(
-          'Account',
+          categoryName,
           style: TextStyle(
               color: Colors.blueAccent,
               fontSize: 18,
