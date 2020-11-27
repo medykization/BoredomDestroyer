@@ -3,9 +3,8 @@ const jwt = require('jsonwebtoken');
 let router = express.Router();
 const db = require('../controller/db');
 const exist = require('../middleware/user_exist');
-const auth = require('../middleware/authorization');
 
-router.post('/login',auth.authenticateToken,(req, res) => {
+router.post('/login',(req, res) => {
     const requser = req.body
     var check = db.checkUser(requser.name,requser.password);
 
