@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/models/place.dart';
 import 'package:flutter_project/screens/settings_screen.dart';
+import 'package:flutter_project/screens/preferences_screen.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -79,6 +80,16 @@ class _MainScreenState extends State<MainScreen> {
               isLoadedEvents == false ? spinkit : _buildEventsView('Events'),
             ],
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute<bool>(builder: (BuildContext context) {
+              return (PreferencesScreen());
+            }));
+          },
+          child: Icon(Icons.search),
+          backgroundColor: Colors.blue,
         ),
       ),
     );
