@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/models/place.dart';
+import 'package:flutter_project/screens/add_event_screen.dart';
 import 'package:flutter_project/screens/settings_screen.dart';
 import 'package:flutter_project/screens/preferences_screen.dart';
 import 'package:geolocator/geolocator.dart';
@@ -40,6 +41,7 @@ class _MainScreenState extends State<MainScreen> {
                 if (val != null) {
                   places = val;
                   isLoadedPlaces = true;
+                  isLoadedEvents = true;
                 }
               }));
     }
@@ -81,65 +83,87 @@ class _MainScreenState extends State<MainScreen> {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute<bool>(builder: (BuildContext context) {
-              return (PreferencesScreen());
-            }));
-          },
-          child: Icon(Icons.search),
-          backgroundColor: Colors.blue,
-        ),
       ),
     );
   }
 
-  ListView _buildPlacesView(String choice) {
-    return ListView.builder(
-        itemExtent: 120,
-        itemCount: places.length,
-        itemBuilder: (context, index) {
-          return Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 2.0, horizontal: 20.0),
-              child: Container(
-                  child: Card(
-                child: ListTile(
-                  title: Text(places[index].name),
-                  subtitle: Text("Distance: " + places[index].distance),
-                  tileColor: Colors.white,
-                  leading: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minHeight: 100,
-                        minWidth: 100,
-                        maxHeight: 100,
-                        maxWidth: 100,
-                      ),
-                      child: Image.network("${places[index].icon}")),
-                ),
-              )));
-        });
-  }
-
-  ListView _buildEventsView(String choice) {
-    return ListView.builder(
-        itemCount: places.length,
-        itemBuilder: (context, index) {
-          return Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 2.0, horizontal: 20.0),
-              child: Container(
-                child: Card(
+  Scaffold _buildPlacesView(String choice) {
+    return new Scaffold(
+      body: ListView.builder(
+          itemExtent: 120,
+          itemCount: places.length,
+          itemBuilder: (context, index) {
+            return Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 2.0, horizontal: 20.0),
+                child: Container(
+                    child: Card(
                   child: ListTile(
                     title: Text(places[index].name),
                     subtitle: Text("Distance: " + places[index].distance),
-                    tileColor: Colors.blueAccent,
-                    leading: Image.network("${places[index].icon}"),
+                    tileColor: Colors.white,
+                    leading: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: 100,
+                          minWidth: 100,
+                          maxHeight: 100,
+                          maxWidth: 100,
+                        ),
+                        child: Image.network("${places[index].icon}")),
                   ),
-                ),
-              ));
-        });
+                )));
+          }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute<bool>(builder: (BuildContext context) {
+            return (PreferencesScreen());
+          }));
+        },
+        child: Icon(Icons.search),
+        backgroundColor: Colors.blue,
+      ),
+    );
+  }
+
+//TODO view for events
+  Scaffold _buildEventsView(String choice) {
+    return new Scaffold(
+      body: ListView.builder(
+          itemExtent: 120,
+          itemCount: places.length,
+          itemBuilder: (context, index) {
+            return Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 2.0, horizontal: 20.0),
+                child: Container(
+                    child: Card(
+                  child: ListTile(
+                    title: Text(places[index].name),
+                    subtitle: Text("Distance: " + places[index].distance),
+                    tileColor: Colors.white,
+                    leading: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: 100,
+                          minWidth: 100,
+                          maxHeight: 100,
+                          maxWidth: 100,
+                        ),
+                        child: Image.network("${places[index].icon}")),
+                  ),
+                )));
+          }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute<bool>(builder: (BuildContext context) {
+            return (AddEventScreen());
+          }));
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Colors.blue,
+      ),
+    );
   }
 }
 
