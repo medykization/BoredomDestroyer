@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import 'main_screen.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class AddEventScreen extends StatefulWidget {
   @override
@@ -13,11 +12,13 @@ String eventName, location, description;
 DateTime startTime, endTime;
 String category;
 
+var _currentSelectedCategory;
 List<String> _categories = [
   "tournament",
   "party",
   "concert",
   "festival",
+  "other",
 ];
 
 List<DropdownMenuItem<String>> _dropDownMenuItems;
@@ -59,104 +60,151 @@ class _AddEventScreenState extends State<AddEventScreen> {
         backgroundColor: Colors.blueAccent,
         title: Text('Add Event'),
       ),
-      body: new Center(
-        child: Column(
-          children: <Widget>[
-            Expanded(flex: 2, child: _buildWelcomeTextRow()),
-            _buildEventNameRow(),
-            _buildLocationRow(),
-            _buildCategoryRow(),
-            _buildDescriptionRow(),
-            Expanded(flex: 1, child: _buildPublishButton())
-          ],
+      body: SingleChildScrollView(
+        child: new Center(
+          child: Column(
+            children: <Widget>[
+              _buildCategoryRow(),
+              _buildEventNameRow(),
+              _buildLocationRow(),
+              _buildDateTimeBeginRow(),
+              _buildDateTimeBeginRow(),
+              _buildDescriptionRow(),
+              _buildPublishButton(),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildWelcomeTextRow() {
-    return Padding(
-        padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            new Text(
-              'Add Event',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 34),
-            ),
-          ],
-        ));
-  }
-
   Widget _buildEventNameRow() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 60.0),
+      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 60.0),
       child: TextFormField(
         keyboardType: TextInputType.text,
         onChanged: (value) {
           eventName = value;
         },
         decoration: InputDecoration(
-            prefixIcon: Icon(FontAwesomeIcons.book, color: Colors.blueGrey),
-            labelText: 'username'),
+            prefixIcon: Icon(FontAwesomeIcons.bookmark, color: Colors.blueGrey),
+            labelText: 'event name'),
       ),
     );
   }
 
   Widget _buildLocationRow() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 60.0),
+      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 60.0),
       child: TextFormField(
         keyboardType: TextInputType.text,
         onChanged: (value) {
           location = value;
         },
         decoration: InputDecoration(
-            prefixIcon:
-                Icon(FontAwesomeIcons.locationArrow, color: Colors.blueGrey),
+            prefixIcon: Icon(FontAwesomeIcons.mapPin, color: Colors.blueGrey),
             labelText: 'location'),
+      ),
+    );
+  }
+
+  Widget _buildDateTimeBeginRow() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 45.0),
+      child: FlatButton(
+        onPressed: () {
+          DatePicker.showDateTimePicker(context, showTitleActions: true,
+              onConfirm: (date) {
+            //TO DO ON CONFIRM
+            print('confirm $date');
+          }, currentTime: DateTime.now(), locale: LocaleType.pl);
+        },
+        child: TextFormField(
+          enabled: false,
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(
+              prefixIcon: Icon(FontAwesomeIcons.clock, color: Colors.blueGrey),
+              labelText: '2020-12-13 19:49'),
+        ),
       ),
     );
   }
 
   Widget _buildDescriptionRow() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 60.0),
+      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 60.0),
       child: TextFormField(
-        keyboardType: TextInputType.text,
+        keyboardType: TextInputType.multiline,
+        maxLines: null,
         onChanged: (value) {
           location = value;
         },
         decoration: InputDecoration(
-            prefixIcon: Icon(FontAwesomeIcons.archive, color: Colors.blueGrey),
+            prefixIcon: Icon(FontAwesomeIcons.info, color: Colors.blueGrey),
             labelText: 'description'),
       ),
     );
   }
 
+  Widget _buildCategoryRowNew() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
+      child: FormField<String>(
+        builder: (FormFieldState<String> state) {
+          return InputDecorator(
+            decoration: InputDecoration(
+                labelStyle: null,
+                errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                hintText: 'select category',
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(3.0))),
+            isEmpty: _currentSelectedCategory == '',
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _currentSelectedCategory,
+                isDense: true,
+                onChanged: (String newValue) {
+                  setState(() {
+                    _currentSelectedCategory = newValue;
+                    state.didChange(newValue);
+                  });
+                },
+                items: _categories.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildCategoryRow() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        new Text("Please choose your Category: "),
-        new Container(
-          padding: new EdgeInsets.all(16.0),
-        ),
-        new DropdownButton(
-          value: category,
-          items: _dropDownMenuItems,
-          onChanged: changedDropDownItem,
-        )
-      ],
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 20),
+      child: Column(
+        children: <Widget>[
+          new Container(
+            padding: new EdgeInsets.all(16.0),
+          ),
+          new DropdownButton(
+            hint: Text("select category"),
+            value: category,
+            items: _dropDownMenuItems,
+            onChanged: changedDropDownItem,
+          )
+        ],
+      ),
     );
   }
 
   Widget _buildPublishButton() {
     return Padding(
-      padding: EdgeInsets.only(left: 60, right: 60, top: 10),
+      padding: EdgeInsets.symmetric(vertical: 50, horizontal: 130),
       child: ButtonTheme(
         shape: new RoundedRectangleBorder(
             borderRadius: new BorderRadius.circular(10)),
@@ -164,7 +212,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         height: 50.0,
         child: FlatButton(
           onPressed: () async {
-            print("test dodawania eventów");
+            print("test dodawania eventów: " + _currentSelectedCategory);
           },
           child: Text(
             'Publish',
