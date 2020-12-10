@@ -2,7 +2,8 @@ require("dotenv").config();
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
-const authentication = require("./routes/authentication"); 
+const authentication = require("./routes/authentication");
+const events = require("./routes/events");
 const { pool } = require("./dbConfig");
 
 //  middleware
@@ -24,6 +25,7 @@ app.get('/db', async (req, res) => {
 app.listen(port, () => console.log("Server is running"));
 
 app.use("/authentication", authentication);
+app.use("/events", events);
 
 app.get('/', (req, res) => {
     res.send('hello world')

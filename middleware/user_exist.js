@@ -6,7 +6,6 @@ function checkIfEmailExist(req, res, next) {
     var checkEmail = db.checkEmail(requser.email);
     checkEmail.then(function(result){
         if(result != null){
-            console.log("dupaEMAIL");
             return res.sendStatus(409);
         }
         next();
@@ -19,7 +18,6 @@ function checkIfNameExist(req, res, next) {
     var checkName = db.checkName(requser.name); 
     checkName.then(function(result){
         if(result != null){
-            console.log("dupaNAME");
             return res.sendStatus(409);
         }
         next();
