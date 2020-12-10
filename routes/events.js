@@ -72,3 +72,5 @@ router.post('/add', auth.authenticateToken, (req, res) => {
         }
     })
 });
+
+module.exports = router
