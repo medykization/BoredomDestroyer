@@ -47,7 +47,7 @@ async function getEventCategoryId(category_name) {
 async function getLocalEvents(city) {
     try {
         const client = await pool.connect();
-        const selectQuery = 'SELECT * FROM event WHERE event_location -> \'city\' = $1';
+        const selectQuery = 'SELECT * FROM event WHERE event_location ->> \'city\' = $1';
         const result = await client.query(selectQuery, city);
         const results = { 'results': (result) ? result.rows : null};
         if(result.rows[0] != null){
