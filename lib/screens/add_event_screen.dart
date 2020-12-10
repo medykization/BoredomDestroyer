@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:search_map_place/search_map_place.dart';
+import 'package:intl/intl.dart';
 
 class AddEventScreen extends StatefulWidget {
   @override
@@ -47,6 +49,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
     });
   }
 
+  String _apiKey = "AIzaSyDuNDK_ogM5AnrMqawuqZQYzDVXkVnE45I";
+  String formattedDate = DateFormat('yyyy-MM-dd kk:mm').format(DateTime.now());
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -64,7 +69,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         child: new Center(
           child: Column(
             children: <Widget>[
-              _buildCategoryRow(),
+              _buildCategoryRowNew(),
               _buildEventNameRow(),
               _buildLocationRow(),
               _buildDateTimeBeginRow(),
@@ -95,15 +100,16 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   Widget _buildLocationRow() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 60.0),
-      child: TextFormField(
-        keyboardType: TextInputType.text,
-        onChanged: (value) {
-          location = value;
+      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 60.0),
+      child: SearchMapPlaceWidget(
+        hasClearButton: true,
+        placeType: PlaceType.address,
+        placeholder: 'Enter event location',
+        language: 'pl',
+        apiKey: _apiKey,
+        onSelected: (Place place) {
+          print(place.fullJSON);
         },
-        decoration: InputDecoration(
-            prefixIcon: Icon(FontAwesomeIcons.mapPin, color: Colors.blueGrey),
-            labelText: 'location'),
       ),
     );
   }
@@ -124,7 +130,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
           keyboardType: TextInputType.text,
           decoration: InputDecoration(
               prefixIcon: Icon(FontAwesomeIcons.clock, color: Colors.blueGrey),
-              labelText: '2020-12-13 19:49'),
+              labelText: formattedDate),
         ),
       ),
     );
@@ -179,25 +185,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildCategoryRow() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20),
-      child: Column(
-        children: <Widget>[
-          new Container(
-            padding: new EdgeInsets.all(16.0),
-          ),
-          new DropdownButton(
-            hint: Text("select category"),
-            value: category,
-            items: _dropDownMenuItems,
-            onChanged: changedDropDownItem,
-          )
-        ],
       ),
     );
   }
