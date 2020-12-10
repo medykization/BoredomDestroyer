@@ -18,7 +18,7 @@ class PlacesApi {
     List<Location> origin = new List();
     origin.add(location);
 
-    List<Place> resutls = new List();
+    List<Place> results = new List();
     try {
       for (String val in preferences) {
         PlacesSearchResponse response = await places.searchNearbyWithRadius(
@@ -49,12 +49,12 @@ class PlacesApi {
                   next.geometry.location.lat, next.geometry.location.lng));
 
               place.distance = await _getDistanceData(origin, destination);
-              resutls.add(place);
+              results.add(place);
             }
           }
         }
       }
-      return resutls;
+      return results;
     } catch (e) {
       print(e.toString());
       return null;
