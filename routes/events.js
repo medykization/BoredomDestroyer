@@ -4,8 +4,8 @@ const Event  = require("../models/event");
 const auth = require('../middleware/authorization');
 const db = require('../controller/db');
 let router = express.Router();
-
-router.get('/categories', auth.authenticateToken, (req, res) => {
+//change to get
+router.post('/categories', auth.authenticateToken, (req, res) => {
     var check = db.getCategories();
     check.then(function(result){
         if(result != null) {
@@ -16,8 +16,8 @@ router.get('/categories', auth.authenticateToken, (req, res) => {
         }
     })
 });
-
-router.get('/local', auth.authenticateToken, (req, res) => {
+//change to get
+router.post('/local', auth.authenticateToken, (req, res) => {
     const body = req.body
     var check = db.getLocalEvents(body.city);
     check.then(function(result){
