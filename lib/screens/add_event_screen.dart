@@ -51,6 +51,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   String _apiKey = "AIzaSyDuNDK_ogM5AnrMqawuqZQYzDVXkVnE45I";
   String formattedDate = DateFormat('yyyy-MM-dd kk:mm').format(DateTime.now());
+  String inputDateTimeBegin;
+  String inputDateTimeEnd;
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +75,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
               _buildEventNameRow(),
               _buildLocationRow(),
               _buildDateTimeBeginRow(),
-              _buildDateTimeBeginRow(),
+              _buildDateTimeEndRow(),
               _buildDescriptionRow(),
               _buildPublishButton(),
             ],
@@ -122,6 +124,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
           DatePicker.showDateTimePicker(context, showTitleActions: true,
               onConfirm: (date) {
             //TO DO ON CONFIRM
+            setState(() {
+              inputDateTimeBegin = formatDate(date);
+            });
             print('confirm $date');
           }, currentTime: DateTime.now(), locale: LocaleType.pl);
         },
@@ -130,7 +135,36 @@ class _AddEventScreenState extends State<AddEventScreen> {
           keyboardType: TextInputType.text,
           decoration: InputDecoration(
               prefixIcon: Icon(FontAwesomeIcons.clock, color: Colors.blueGrey),
-              labelText: formattedDate),
+              labelText: inputDateTimeBegin == null
+                  ? formatDate(DateTime.now())
+                  : inputDateTimeBegin),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDateTimeEndRow() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 45.0),
+      child: FlatButton(
+        onPressed: () {
+          DatePicker.showDateTimePicker(context, showTitleActions: true,
+              onConfirm: (date) {
+            //TO DO ON CONFIRM
+            setState(() {
+              inputDateTimeEnd = formatDate(date);
+            });
+            print('confirm $date');
+          }, currentTime: DateTime.now(), locale: LocaleType.pl);
+        },
+        child: TextFormField(
+          enabled: false,
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(
+              prefixIcon: Icon(FontAwesomeIcons.clock, color: Colors.blueGrey),
+              labelText: inputDateTimeEnd == null
+                  ? formatDate(DateTime.now())
+                  : inputDateTimeEnd),
         ),
       ),
     );
@@ -228,5 +262,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
         },
       ),
     );
+  }
+
+  String formatDate(DateTime dateTime) {
+    return DateFormat('yyyy-MM-dd kk:mm').format(dateTime);
   }
 }
