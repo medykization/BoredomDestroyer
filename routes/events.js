@@ -3,6 +3,8 @@ const User  = require("../models/user");
 const Event  = require("../models/event");
 const auth = require('../middleware/authorization');
 const db = require('../controller/db');
+const jwt = require('jsonwebtoken');
+
 let router = express.Router();
 //change to get
 router.post('/categories', auth.authenticateToken, (req, res) => {
@@ -34,23 +36,26 @@ router.post('/add', auth.authenticateToken, (req, res) => {
     var user_name
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
-    jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err, user) => {user_name = user})
+    jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err, user) => {user_name = user.name})
+    console.log(user_name);
 
     var userId = db.getUserIdFromName(user_name)
     userId.then(function(result){
         if(result != null) {
-
+            console.log(result.results[0].id);
+            var user_id = result.results[0].id;
             const body = req.body
 
             var category_id
             var categoryID = db.getEventCategoryId(body.category_name);
             categoryID.then(function(result){
                 if(result != null) {
-                    category_id = result
+                    console.log(result.results[0].id);
+                    category_id = result.results[0].id;
                     
                     var event = new Event(user_id,body.event_name,category_id,body.description,
                         body.location_city,body.location_address,body.begin_time,body.end_time,0)
-                    var check = db.getLocalEvents(event);
+                    var check = db.insertEvent(event);
                     check.then(function(result){
                         if(result != null) {
                             res.json(result)

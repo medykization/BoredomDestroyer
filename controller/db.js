@@ -70,7 +70,7 @@ async function insertEvent(event) {
         const client = await pool.connect();
         const selectQuery = 'INSERT INTO event(user_id ,event_name, category_id, description, location_city, location_address, begin_time, end_time, rating)\
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *';
-        const result = await client.query(selectQuery, [event.id, event.event_name, event.category_id, event.description,
+        const result = await client.query(selectQuery, [event.user_id, event.event_name, event.category_id, event.description,
                                                          event.location_city,event.location_address, event.begin_time, event.end_time, event.rating]);
         const results = { 'results': (result) ? result.rows : null};
 
@@ -83,7 +83,7 @@ async function insertEvent(event) {
             return null;
         }
     }catch (err) {
-        client.release();
+        console.log(err);
         return null;
     }
 };
