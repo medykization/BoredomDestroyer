@@ -1,8 +1,20 @@
 class Event {
   String name;
-  String place;
-  String time;
+  String locationCity;
+  String locationAddress;
+  String category;
+  DateTime dateTimeBegin;
+  DateTime dateTimeEnd;
+  String description;
   int userRating;
 
-  Event({this.name, this.place, this.time, this.userRating});
+  Event(
+      {this.name,
+      this.locationCity,
+      this.locationAddress,
+      this.category,
+      this.dateTimeBegin,
+      this.dateTimeEnd,
+      this.description,
+      this.userRating});
 }

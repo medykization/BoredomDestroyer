@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project/API/events.dart';
+import 'package:flutter_project/models/event.dart';
 import 'package:flutter_project/models/place.dart';
 import 'package:flutter_project/screens/add_event_screen.dart';
 import 'package:flutter_project/screens/settings_screen.dart';
@@ -15,8 +17,12 @@ class MainScreen extends StatefulWidget {
 
 bool isLoadedPlaces = false;
 bool isLoadedEvents = false;
+
 List<Place> places;
+List<Event> events;
+
 PlacesApi placesApi = new PlacesApi();
+EventsApi eventsApi = new EventsApi();
 
 Set<String> preferences = {
   "restaurant",
@@ -41,9 +47,18 @@ class _MainScreenState extends State<MainScreen> {
                 if (val != null) {
                   places = val;
                   isLoadedPlaces = true;
-                  isLoadedEvents = true;
                 }
               }));
+    }
+
+    String city = "Łódź"; // TEST
+    if (city != null) {
+      await eventsApi.getEventsNearby(city).then((val) => setState(() {
+            if (val != null) {
+              events = val;
+              isLoadedEvents = true;
+            }
+          }));
     }
   }
 
@@ -126,12 +141,11 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-//TODO view for events
   Scaffold _buildEventsView(String choice) {
     return new Scaffold(
       body: ListView.builder(
           itemExtent: 120,
-          itemCount: places.length,
+          itemCount: events.length,
           itemBuilder: (context, index) {
             return Padding(
                 padding:
@@ -139,8 +153,8 @@ class _MainScreenState extends State<MainScreen> {
                 child: Container(
                     child: Card(
                   child: ListTile(
-                    title: Text(places[index].name),
-                    subtitle: Text("Distance: " + places[index].distance),
+                    title: Text(events[index].name),
+                    subtitle: Text("Subtitle"),
                     tileColor: Colors.white,
                     leading: ConstrainedBox(
                         constraints: BoxConstraints(
@@ -149,7 +163,7 @@ class _MainScreenState extends State<MainScreen> {
                           maxHeight: 100,
                           maxWidth: 100,
                         ),
-                        child: Image.network("${places[index].icon}")),
+                        child: Icon(Icons.access_alarm)),
                   ),
                 )));
           }),
