@@ -49,7 +49,7 @@ router.post('/add', auth.authenticateToken, (req, res) => {
                     category_id = result
                     
                     var event = new Event(user_id,body.event_name,category_id,body.description,
-                        body.location,body.begin_time,body.end_time,0)
+                        body.location_city,body.location_address,body.begin_time,body.end_time,0)
                     var check = db.getLocalEvents(event);
                     check.then(function(result){
                         if(result != null) {
