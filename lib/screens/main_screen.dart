@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_project/API/events.dart';
 import 'package:flutter_project/models/event.dart';
@@ -18,6 +20,8 @@ class MainScreen extends StatefulWidget {
 bool isLoadedPlaces = false;
 bool isLoadedEvents = false;
 
+Timer _timer;
+
 List<Place> places;
 List<Event> events;
 
@@ -32,11 +36,26 @@ Set<String> preferences = {
 class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
-    _loadData();
+    _loadPlaces();
+    _loadEvents();
+    setTimer();
     super.initState();
   }
 
-  void _loadData() async {
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  setTimer() {
+    _timer = new Timer.periodic(Duration(minutes: 1), (timer) {
+      _loadPlaces();
+      _loadEvents();
+    });
+  }
+
+  Future<void> _loadPlaces() async {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     if (position != null) {
@@ -50,7 +69,9 @@ class _MainScreenState extends State<MainScreen> {
                 }
               }));
     }
+  }
 
+  Future<void> _loadEvents() async {
     String city = "Łódź"; // TEST
     if (city != null) {
       await eventsApi.getEventsNearby(city).then((val) => setState(() {
@@ -104,30 +125,33 @@ class _MainScreenState extends State<MainScreen> {
 
   Scaffold _buildPlacesView(String choice) {
     return new Scaffold(
-      body: ListView.builder(
-          itemExtent: 120,
-          itemCount: places.length,
-          itemBuilder: (context, index) {
-            return Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 2.0, horizontal: 20.0),
-                child: Container(
-                    child: Card(
-                  child: ListTile(
-                    title: Text(places[index].name),
-                    subtitle: Text("Distance: " + places[index].distance),
-                    tileColor: Colors.white,
-                    leading: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minHeight: 100,
-                          minWidth: 100,
-                          maxHeight: 100,
-                          maxWidth: 100,
-                        ),
-                        child: Image.network("${places[index].icon}")),
-                  ),
-                )));
-          }),
+      body: RefreshIndicator(
+        onRefresh: _loadPlaces,
+        child: ListView.builder(
+            itemExtent: 120,
+            itemCount: places.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 2.0, horizontal: 20.0),
+                  child: Container(
+                      child: Card(
+                    child: ListTile(
+                      title: Text(places[index].name),
+                      subtitle: Text("Distance: " + places[index].distance),
+                      tileColor: Colors.white,
+                      leading: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: 100,
+                            minWidth: 100,
+                            maxHeight: 100,
+                            maxWidth: 100,
+                          ),
+                          child: Image.network("${places[index].icon}")),
+                    ),
+                  )));
+            }),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context,
@@ -143,30 +167,35 @@ class _MainScreenState extends State<MainScreen> {
 
   Scaffold _buildEventsView(String choice) {
     return new Scaffold(
-      body: ListView.builder(
-          itemExtent: 120,
-          itemCount: events.length,
-          itemBuilder: (context, index) {
-            return Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 2.0, horizontal: 20.0),
-                child: Container(
-                    child: Card(
-                  child: ListTile(
-                    title: Text(events[index].name),
-                    subtitle: Text("Subtitle"),
-                    tileColor: Colors.white,
-                    leading: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minHeight: 100,
-                          minWidth: 100,
-                          maxHeight: 100,
-                          maxWidth: 100,
-                        ),
-                        child: Icon(Icons.access_alarm)),
-                  ),
-                )));
-          }),
+      body: RefreshIndicator(
+        onRefresh: _loadEvents,
+        child: ListView.builder(
+            itemExtent: 120,
+            itemCount: events.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 2.0, horizontal: 20.0),
+                  child: Container(
+                      child: Card(
+                    child: ListTile(
+                      title: Text(events[index].name),
+                      subtitle: Text(events[index].locationAddress),
+                      trailing:
+                          Text(events[index].dateTimeBegin.substring(11, 16)),
+                      tileColor: Colors.white,
+                      leading: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: 100,
+                            minWidth: 100,
+                            maxHeight: 100,
+                            maxWidth: 100,
+                          ),
+                          child: Icon(Icons.access_alarm)),
+                    ),
+                  )));
+            }),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context,
