@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_project/API/events.dart';
+import 'package:flutter_project/API/places.dart';
 
 class PreferencesScreen extends StatefulWidget {
   @override
   _PreferencesScreenState createState() => _PreferencesScreenState();
 }
 
-EventsApi eventsApi = new EventsApi();
+PlacesApi placesApi = new PlacesApi();
 List<String> _categories;
 List<String> _filters;
 
@@ -106,6 +106,6 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
   }
 
   _loadCategories() {
-    _categories = eventsApi.getCategories();
+    _categories = placesApi.getCategories();
   }
 }
