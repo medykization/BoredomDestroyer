@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_project/API/events.dart';
+import 'package:flutter_project/screens/main_screen.dart';
 
 class PreferencesScreen extends StatefulWidget {
   @override
   _PreferencesScreenState createState() => _PreferencesScreenState();
 }
 
+EventsApi eventsApi = new EventsApi();
 List<String> _categories;
 List<String> _filters;
 
@@ -14,20 +17,8 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
   void initState() {
     super.initState();
     _filters = <String>[];
-    _categories = <String>[
-      "movie theater",
-      "cafe",
-      "bar",
-      "beauty salon",
-      "bowling alley",
-      "casino",
-      "gym",
-      "zoo",
-      "spa",
-      "shopping mall",
-      "night club",
-      "museum",
-    ];
+    _loadCategories();
+    print(_categories);
   }
 
   @override
@@ -50,8 +41,16 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Expanded(
+                flex: 2,
+                child: Container(),
+              ),
               Wrap(children: categoryWidgets.toList()),
               //Text('Selected: ${_filters.join(', ')}'), // TESTING
+              Expanded(
+                flex: 1,
+                child: Container(),
+              ),
               _buildSearchButton()
             ],
           ),
@@ -106,5 +105,13 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
         ),
       ),
     );
+  }
+
+  _loadCategories() {
+    eventsApi.getCategories().then((val) => setState(() {
+          if (val != null) {
+            _categories = val;
+          }
+        }));
   }
 }
