@@ -6,7 +6,7 @@ import 'package:flutter_project/models/event.dart';
 import 'package:flutter_project/models/place.dart';
 import 'package:flutter_project/screens/add_event_screen.dart';
 import 'package:flutter_project/screens/settings_screen.dart';
-import 'package:flutter_project/screens/preferences_screen.dart';
+import 'package:flutter_project/screens/filter_screens/places_filter_screen.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
