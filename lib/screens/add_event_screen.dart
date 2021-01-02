@@ -72,8 +72,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
           child: Column(
             children: <Widget>[
               _buildCategoryRowNew(),
-              _buildEventNameRow(),
               _buildLocationRow(),
+              _buildEventNameRow(),
               _buildDateTimeBeginRow(),
               _buildDateTimeEndRow(),
               _buildDescriptionRow(),
@@ -188,16 +188,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   Widget _buildCategoryRowNew() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 150, vertical: 50),
       child: FormField<String>(
         builder: (FormFieldState<String> state) {
           return InputDecorator(
             decoration: InputDecoration(
-                labelStyle: null,
-                errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
-                hintText: 'select category',
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(3.0))),
+              labelStyle: null,
+              errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
+            ),
             isEmpty: _currentSelectedCategory == '',
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
