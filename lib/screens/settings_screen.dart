@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_project/screens/preferences_screen.dart';
+import 'package:flutter_project/screens/search_places_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -29,7 +29,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildCategoryBar('Account', Icons.person),
             Divider(height: 15, thickness: 2),
             _buildChangePasswordButton(),
-            _buildPreferencesButton(),
             SizedBox(height: 20),
             _buildCategoryBar('App', Icons.settings),
             Divider(height: 15, thickness: 2),
@@ -72,35 +71,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: [
           Text(
             'Change Password',
-            style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 16,
-                fontWeight: FontWeight.bold),
-          ),
-          Icon(
-            Icons.arrow_forward_ios,
-            color: Colors.grey[600],
-            size: 20.0,
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPreferencesButton() {
-    return FlatButton(
-      onPressed: () {
-        //Navigate to Preferences Screen
-        Navigator.push(context,
-            MaterialPageRoute<bool>(builder: (BuildContext context) {
-          return PreferencesScreen();
-        }));
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Preferences',
             style: TextStyle(
                 color: Colors.grey[600],
                 fontSize: 16,
