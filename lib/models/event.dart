@@ -2,9 +2,9 @@ class Event {
   String name;
   String locationCity;
   String locationAddress;
-  String category;
-  DateTime dateTimeBegin;
-  DateTime dateTimeEnd;
+  int category;
+  String dateTimeBegin;
+  String dateTimeEnd;
   String description;
   int userRating;
 
@@ -17,4 +17,22 @@ class Event {
       this.dateTimeEnd,
       this.description,
       this.userRating});
+
+  factory Event.fromJson(dynamic json) {
+    return Event(
+      name: json['event_name'],
+      locationCity: json['location_city'],
+      locationAddress: json['location_address'],
+      category: json['category_id'],
+      dateTimeBegin: json['begin_time'],
+      dateTimeEnd: json['end_time'],
+      description: json['description'],
+      userRating: json['rating'],
+    );
+  }
+
+  @override
+  String toString() {
+    return '{ ${this.name}, ${this.locationCity}, ${this.locationAddress}, ${this.category}, ${this.dateTimeBegin}, ${this.dateTimeEnd}, ${this.description}, ${this.userRating} }';
+  }
 }

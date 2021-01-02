@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_project/models/event.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -28,10 +26,12 @@ class EventsApi {
           body: body);
 
       print(response.statusCode);
-      print("Events response body: \n" + response.body);
 
-      Event testEvent = new Event(name: "nazwa");
-      results.add(testEvent);
+      var jsonResponse = convert.json.decode(response.body)['results'] as List;
+
+      results = jsonResponse.map((val) => Event.fromJson(val)).toList();
+
+      print(results.toString());
     } catch (e) {
       print(e.toString());
     }
