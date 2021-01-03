@@ -37,7 +37,6 @@ router.post('/add', auth.authenticateToken, (req, res) => {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
     jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err, user) => {user_name = user.name})
-    console.log(user_name);
 
     var userId = db.getUserIdFromName(user_name)
     userId.then(function(result){

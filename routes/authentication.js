@@ -3,6 +3,18 @@ const jwt = require('jsonwebtoken');
 let router = express.Router();
 const db = require('../controller/db');
 const exist = require('../middleware/user_exist');
+const auth = require('../middleware/authorization');
+
+router.post('/refresh',(req, res) => {
+    const refreshToken = req.body.token
+    if(refreshToken == null) return res.sendStatus(401)
+    //check if refreshtoken exist in database
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+        if(err) return res.sendStatus(403)
+        const accessToken = jwt.sign(user.name, process.env.ACCES_TOKEN_SECRET, {expiresIn: '10m'});
+        return res.json({accessToken: accessToken})
+    })
+});
 
 router.post('/login',(req, res) => {
     const body = req.body
@@ -10,9 +22,10 @@ router.post('/login',(req, res) => {
 
     check.then(function(result){
         if(result != null) {
-            const user = {name: body.name, password: body.password}
-            const accessToken = jwt.sign(user, process.env.ACCES_TOKEN_SECRET);
-            res.json({accessToken: accessToken})
+            const user = {name: body.name}
+            const accessToken = jwt.sign(user, process.env.ACCES_TOKEN_SECRET, {expiresIn: '10m'});
+            const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
+            res.json({accessToken: accessToken, refreshToken: refreshToken})
         }
         else {
             res.sendStatus(400)
@@ -30,12 +43,17 @@ router.post('/registration', exist.checkIfEmailExist, exist.checkIfNameExist, (r
         if(result == null)
             return res.sendStatus(409);
         else{
-            const user = {name: body.name, password: body.password}
-            const accessToken = jwt.sign(user, process.env.ACCES_TOKEN_SECRET);
-            res.json({accessToken: accessToken})
+            const user = {name: body.name}
+            const accessToken = jwt.sign(user, process.env.ACCES_TOKEN_SECRET, {expiresIn: '10m'});
+            const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
+            res.json({accessToken: accessToken, refreshToken: refreshToken})
         }
     })
 
 });
+
+function generateAccessToken(username) {
+    const accessToken = jwt.sign(user, process.env.ACCES_TOKEN_SECRET);
+};
 
 module.exports = router

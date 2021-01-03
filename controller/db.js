@@ -105,7 +105,6 @@ async function checkUser(username, password) {
         }
 
     }catch (err) {
-        client.release();
         return null;
     }
 };
@@ -190,7 +189,7 @@ async function insertUser(username, email, password) {
         return null;
     }
 };
-getEventCategoryId
+
 exports.getEventCategoryId = getEventCategoryId
 exports.getUserIdFromName = getUserIdFromName
 exports.getLocalEvents = getLocalEvents
