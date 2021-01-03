@@ -12,6 +12,9 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_project/API/places.dart';
 
+import 'detailsScreens/event_details_screen.dart';
+import 'detailsScreens/place_details_screen.dart';
+
 class MainScreen extends StatefulWidget {
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -135,19 +138,27 @@ class _MainScreenState extends State<MainScreen> {
                   padding: const EdgeInsets.symmetric(
                       vertical: 2.0, horizontal: 20.0),
                   child: Container(
-                      child: Card(
-                    child: ListTile(
-                      title: Text(places[index].name),
-                      subtitle: Text("Distance: " + places[index].distance),
-                      tileColor: Colors.white,
-                      leading: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minHeight: 100,
-                            minWidth: 100,
-                            maxHeight: 100,
-                            maxWidth: 100,
-                          ),
-                          child: Image.network("${places[index].icon}")),
+                      child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute<bool>(
+                          builder: (BuildContext context) {
+                        return (PlaceDetailsScreen()); // Place Details onTap
+                      }));
+                    },
+                    child: Card(
+                      child: ListTile(
+                        title: Text(places[index].name),
+                        subtitle: Text("Distance: " + places[index].distance),
+                        tileColor: Colors.white,
+                        leading: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: 100,
+                              minWidth: 100,
+                              maxHeight: 100,
+                              maxWidth: 100,
+                            ),
+                            child: Image.network("${places[index].icon}")),
+                      ),
                     ),
                   )));
             }),
@@ -177,21 +188,29 @@ class _MainScreenState extends State<MainScreen> {
                   padding: const EdgeInsets.symmetric(
                       vertical: 2.0, horizontal: 20.0),
                   child: Container(
-                      child: Card(
-                    child: ListTile(
-                      title: Text(events[index].name),
-                      subtitle: Text(events[index].locationAddress),
-                      trailing:
-                          Text(events[index].dateTimeBegin.substring(11, 16)),
-                      tileColor: Colors.white,
-                      leading: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minHeight: 100,
-                            minWidth: 100,
-                            maxHeight: 100,
-                            maxWidth: 100,
-                          ),
-                          child: Icon(Icons.access_alarm)),
+                      child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute<bool>(
+                          builder: (BuildContext context) {
+                        return (EventDetailsScreen()); // Event Details onTap
+                      }));
+                    },
+                    child: Card(
+                      child: ListTile(
+                        title: Text(events[index].name),
+                        subtitle: Text(events[index].locationAddress),
+                        trailing:
+                            Text(events[index].dateTimeBegin.substring(11, 16)),
+                        tileColor: Colors.white,
+                        leading: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: 100,
+                              minWidth: 100,
+                              maxHeight: 100,
+                              maxWidth: 100,
+                            ),
+                            child: Icon(Icons.access_alarm)),
+                      ),
                     ),
                   )));
             }),
