@@ -1,38 +1,56 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_project/screens/elements/rounded_app_bar.dart';
+import 'package:flutter_project/models/place.dart';
 
 class PlaceDetailsScreen extends StatefulWidget {
+  final Place place;
+  PlaceDetailsScreen({Key key, @required this.place}) : super(key: key);
   @override
-  _PlaceDetailsScreenState createState() => _PlaceDetailsScreenState();
+  _PlaceDetailsScreenState createState() =>
+      _PlaceDetailsScreenState(place: place);
 }
 
 class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
+  // Declare a field that holds the Todo.
+  final Place place;
+
+  // In the constructor, require a Todo.
+  _PlaceDetailsScreenState({@required this.place});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80),
-        child: CustomPaint(
-          size: Size(800, 150),
-          painter: RoundedAppBar(),
-        ),
-      ),
-      body: new Center(
-        child: Column(
-          children: <Widget>[
-            Expanded(flex: 1, child: Container()),
-            _buildPlaceName(),
-            Expanded(flex: 1, child: Container()),
-          ],
-        ),
-      ),
+      body: Center(
+          child: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            title: Text(place.name),
+            backgroundColor: Colors.redAccent,
+            expandedHeight: 300,
+            flexibleSpace: FlexibleSpaceBar(
+              background: FittedBox(
+                child: new Image.network("${place.icon}"),
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+          SliverFixedExtentList(
+            itemExtent: 150.0,
+            delegate: SliverChildListDelegate([
+              Text(place.name),
+              Text(place.distance),
+              //Text(place.location.toString()),
+              Text('TEST'),
+              Text('TEST'),
+              Text('TEST'),
+              Text('TEST'),
+              Text('TEST'),
+              Text('TEST'),
+            ]),
+          )
+        ],
+      )),
     );
   }
-}
-
-Widget _buildPlaceName() {
-  return Column(
-    children: [Text("data")],
-  );
 }

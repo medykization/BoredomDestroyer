@@ -10,7 +10,7 @@ class PlacesApi {
       apiKey: "AIzaSyDuNDK_ogM5AnrMqawuqZQYzDVXkVnE45I");
 
   final photoLink =
-      "https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&maxheight=100&photoreference=";
+      "https://maps.googleapis.com/maps/api/place/photo?maxwidth=350&maxheight=350&photoreference=";
 
   Future<List<Place>> getNearbyPlaces(
       int radius, Location location, Set<String> preferences) async {

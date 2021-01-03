@@ -142,7 +142,9 @@ class _MainScreenState extends State<MainScreen> {
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute<bool>(
                           builder: (BuildContext context) {
-                        return (PlaceDetailsScreen()); // Place Details onTap
+                        return (PlaceDetailsScreen(
+                          place: places[index],
+                        )); // Place Details onTap
                       }));
                     },
                     child: Card(
@@ -151,13 +153,17 @@ class _MainScreenState extends State<MainScreen> {
                         subtitle: Text("Distance: " + places[index].distance),
                         tileColor: Colors.white,
                         leading: ConstrainedBox(
-                            constraints: BoxConstraints(
-                              minHeight: 100,
-                              minWidth: 100,
-                              maxHeight: 100,
-                              maxWidth: 100,
-                            ),
-                            child: Image.network("${places[index].icon}")),
+                          constraints: BoxConstraints(
+                            minHeight: 100,
+                            minWidth: 100,
+                            maxHeight: 100,
+                            maxWidth: 100,
+                          ),
+                          child: FittedBox(
+                            child: Image.network("${places[index].icon}"),
+                            fit: BoxFit.fill,
+                          ),
+                        ),
                       ),
                     ),
                   )));
