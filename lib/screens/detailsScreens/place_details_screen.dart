@@ -21,11 +21,22 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: Icon(Icons.near_me),
+          backgroundColor: Colors.redAccent),
+      appBar: AppBar(
+        backgroundColor: Colors.redAccent,
+        title: Text(
+          place.name,
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+      ),
       body: Center(
           child: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-            title: Text(place.name),
+            leading: Text(''),
             backgroundColor: Colors.redAccent,
             expandedHeight: 300,
             flexibleSpace: FlexibleSpaceBar(
@@ -36,17 +47,27 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
             ),
           ),
           SliverFixedExtentList(
-            itemExtent: 150.0,
+            itemExtent: 50.0,
             delegate: SliverChildListDelegate([
-              Text(place.name),
-              Text(place.distance),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Text(
+                  place.name,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Row(
+                  children: [
+                    Icon(Icons.near_me),
+                    Text('   '),
+                    Text('Distance: ' + place.distance,
+                        style: TextStyle(fontSize: 18))
+                  ],
+                ),
+              ),
               //Text(place.location.toString()),
-              Text('TEST'),
-              Text('TEST'),
-              Text('TEST'),
-              Text('TEST'),
-              Text('TEST'),
-              Text('TEST'),
             ]),
           )
         ],
