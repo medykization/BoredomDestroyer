@@ -6,12 +6,14 @@ const exist = require('../middleware/user_exist');
 const auth = require('../middleware/authorization');
 
 router.post('/refresh',(req, res) => {
+    console.log(req.body)
     const refreshToken = req.body.token
     if(refreshToken == null) return res.sendStatus(401)
     //check if refreshtoken exist in database
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+        console.log('im in')
         if(err) return res.sendStatus(403)
-        const accessToken = jwt.sign(user.name, process.env.ACCES_TOKEN_SECRET, {expiresIn: '10m'});
+        const accessToken = jwt.sign(user, process.env.ACCES_TOKEN_SECRET, {expiresIn: '10m'});
         return res.json({accessToken: accessToken})
     })
 });
