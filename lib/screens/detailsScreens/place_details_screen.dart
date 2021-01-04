@@ -12,10 +12,7 @@ class PlaceDetailsScreen extends StatefulWidget {
 }
 
 class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
-  // Declare a field that holds the Todo.
   final Place place;
-
-  // In the constructor, require a Todo.
   _PlaceDetailsScreenState({@required this.place});
 
   @override

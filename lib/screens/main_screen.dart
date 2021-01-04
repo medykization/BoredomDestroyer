@@ -198,7 +198,9 @@ class _MainScreenState extends State<MainScreen> {
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute<bool>(
                           builder: (BuildContext context) {
-                        return (EventDetailsScreen()); // Event Details onTap
+                        return (EventDetailsScreen(
+                          event: events[index],
+                        )); // Event Details onTap
                       }));
                     },
                     child: Card(
