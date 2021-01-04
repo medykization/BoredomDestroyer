@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/models/user.dart';
 import 'package:flutter_project/screens/login_screen.dart';
-import 'package:flutter_project/screens/preferences_screen.dart';
 import 'package:hive/hive.dart';
 
 class SettingsScreen extends StatefulWidget {

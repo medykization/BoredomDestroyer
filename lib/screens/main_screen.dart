@@ -153,30 +153,18 @@ class _MainScreenState extends State<MainScreen> {
                         subtitle: Text("Distance: " + places[index].distance),
                         tileColor: Colors.white,
                         leading: ConstrainedBox(
-=======
-                      child: Card(
-                    child: ListTile(
-                      title: Text(places[index].name),
-                      subtitle: Text("Distance: " + places[index].distance),
-                      tileColor: Colors.white,
-                      leading: ConstrainedBox(
->>>>>>> Stashed changes
                           constraints: BoxConstraints(
                             minHeight: 100,
                             minWidth: 100,
                             maxHeight: 100,
                             maxWidth: 100,
                           ),
-<<<<<<< Updated upstream
                           child: FittedBox(
                             child: Image.network("${places[index].icon}"),
                             fit: BoxFit.fill,
                           ),
                         ),
                       ),
-=======
-                          child: Image.network("${places[index].icon}")),
->>>>>>> Stashed changes
                     ),
                   )));
             }),
@@ -206,51 +194,33 @@ class _MainScreenState extends State<MainScreen> {
                   padding: const EdgeInsets.symmetric(
                       vertical: 2.0, horizontal: 20.0),
                   child: Container(
-<<<<<<< Updated upstream
                       child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute<bool>(
-                          builder: (BuildContext context) {
-                        return (EventDetailsScreen(
-                          event: events[index],
-                        )); // Event Details onTap
-                      }));
-                    },
-                    child: Card(
-                      child: ListTile(
-                        title: Text(events[index].name),
-                        subtitle: Text(events[index].locationAddress),
-                        trailing:
-                            Text(events[index].dateTimeBegin.substring(11, 16)),
-                        tileColor: Colors.white,
-                        leading: ConstrainedBox(
-                            constraints: BoxConstraints(
-                              minHeight: 100,
-                              minWidth: 100,
-                              maxHeight: 100,
-                              maxWidth: 100,
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute<bool>(
+                                builder: (BuildContext context) {
+                              return (EventDetailsScreen(
+                                event: events[index],
+                              )); // Event Details onTap
+                            }));
+                          },
+                          child: Card(
+                            child: ListTile(
+                              title: Text(events[index].name),
+                              subtitle: Text(events[index].locationAddress),
+                              trailing: Text(events[index]
+                                  .dateTimeBegin
+                                  .substring(11, 16)),
+                              tileColor: Colors.white,
+                              leading: ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                    minHeight: 100,
+                                    minWidth: 100,
+                                    maxHeight: 100,
+                                    maxWidth: 100,
+                                  ),
+                                  child: Icon(Icons.access_alarm)),
                             ),
-                            child: Icon(Icons.access_alarm)),
-                      ),
-=======
-                      child: Card(
-                    child: ListTile(
-                      title: Text(events[index].name),
-                      subtitle: Text(events[index].locationAddress),
-                      trailing:
-                          Text(events[index].dateTimeBegin.substring(11, 16)),
-                      tileColor: Colors.white,
-                      leading: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minHeight: 100,
-                            minWidth: 100,
-                            maxHeight: 100,
-                            maxWidth: 100,
-                          ),
-                          child: Icon(Icons.access_alarm)),
->>>>>>> Stashed changes
-                    ),
-                  )));
+                          ))));
             }),
       ),
       floatingActionButton: FloatingActionButton(
