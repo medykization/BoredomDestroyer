@@ -27,7 +27,8 @@ dependencies:
   google_maps_webservice: ^0.0.18
   http: ^0.12.2
   convert: ^2.1.1
-  shared_preferences: ^0.5.12+4
+  hive: ^1.4.4+1
+  hive_flutter: ^0.3.1
   flutter_spinkit: ^4.1.2+1
   easy_permission_validator: ^2.0.1
   geolocator: ^6.1.7
@@ -42,6 +43,8 @@ dependencies:
   cupertino_icons: ^1.0.0
 
 dev_dependencies:
+  hive_generator: ^0.8.2
+  build_runner: ^1.10.11
   flutter_test:
     sdk: flutter
 

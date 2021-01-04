@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project/API/auth.dart';
 import 'package:flutter_project/screens/login_screen.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_project/screens/main_screen.dart';
 import 'package:flutter_project/screens/splash_screen.dart';
 import 'dart:async';
+
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+import 'models/user.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
@@ -31,9 +38,32 @@ class Application extends StatefulWidget {
 }
 
 class _AppState extends State<Application> {
+  bool isLogged = false;
+  HttpAuth auth = new HttpAuth();
+
+  Future<void> initDataStorage() async {
+    await Hive.initFlutter();
+    Hive.registerAdapter(UserAdapter());
+  }
+
+  Future<void> checkDataStorageForUserCredentials() async {
+    await initDataStorage();
+    Box box = await Hive.openBox<User>('users');
+    User user = await box.get('user');
+    if (user != null) {
+      String token = await auth.refreshToken(user);
+      if (token != null) {
+        user.accessToken = token;
+        await box.put('user', user);
+        isLogged = true;
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    checkDataStorageForUserCredentials();
     Future.delayed(
       Duration(seconds: 3),
       () {
@@ -49,7 +79,10 @@ class _AppState extends State<Application> {
               );
             },
             pageBuilder: (context, animation, animationTime) {
-              return LoginScreen();
+              if (!isLogged) {
+                return LoginScreen();
+              } else
+                return MainScreen();
             },
           ),
         );

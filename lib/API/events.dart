@@ -1,8 +1,8 @@
 import 'package:flutter_project/models/event.dart';
+import 'package:flutter_project/models/user.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
-
-import 'package:shared_preferences/shared_preferences.dart';
 
 class EventsApi {
   static const getEventsURL =
@@ -14,8 +14,11 @@ class EventsApi {
     Map cityMap = {'city': city};
     String body = convert.json.encode(cityMap);
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('token');
+    Box box = await Hive.openBox<User>('users');
+    User user = await box.get('user');
+    await box.close();
+
+    String token = user.accessToken;
 
     try {
       http.Response response = await http.post(getEventsURL,

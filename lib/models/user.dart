@@ -1,14 +1,14 @@
+import 'package:hive/hive.dart';
+part 'user.g.dart';
+
+@HiveType(typeId: 1)
 class User {
+  @HiveField(1)
   String name;
-  String token;
+  @HiveField(2)
+  String accessToken;
+  @HiveField(3)
+  String refreshToken;
 
-  User({this.name, this.token});
-
-  String getName() {
-    return name;
-  }
-
-  String getToken() {
-    return token;
-  }
+  User({this.name, this.accessToken, this.refreshToken});
 }

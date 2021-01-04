@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_project/models/user.dart';
+import 'package:hive/hive.dart';
 import 'elements/rounded_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_project/API/auth.dart';
@@ -15,6 +16,17 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   String username, password;
   HttpAuth httpAuth = new HttpAuth();
+  Box box;
+
+  void initBoxValue() async {
+    box = await Hive.openBox<User>('users');
+  }
+
+  @override
+  void initState() {
+    initBoxValue();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,10 +132,10 @@ class _LoginScreenState extends State<LoginScreen> {
         height: 50.0,
         child: FlatButton(
           onPressed: () async {
-            String token = await signIn();
+            User user = await signIn();
 
-            if (token != null) {
-              _addUserDataToSF(token);
+            if (user.accessToken != null) {
+              _addUserDataToHive(user);
               navigateTo(MainScreen(), 200);
             } else {
               print("\nCan't log in");
@@ -206,8 +218,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Future<String> signIn() async {
-    String data;
+  Future<User> signIn() async {
+    User data;
     await httpAuth.signIn(username, password).then(
           (val) => setState(
             () {
@@ -237,10 +249,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  _addUserDataToSF(String token) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('username', username);
-    prefs.setString('token', token);
+  _addUserDataToHive(User user) async {
+    await box.put("user", user);
+    await box.close();
   }
-  // Use prefs.getString('username') to get data
 }

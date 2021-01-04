@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_project/models/user.dart';
+import 'package:flutter_project/screens/login_screen.dart';
+import 'package:flutter_project/screens/preferences_screen.dart';
+import 'package:hive/hive.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -122,9 +126,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
-        onPressed: () {
-          print("Sign Out Button");
-          // TO DO
+        onPressed: () async {
+          Box box = await Hive.openBox<User>('users');
+          await box.clear();
+          navigateTo(LoginScreen(), 200);
         },
         child: Text(
           'Sign Out',
@@ -134,6 +139,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
             color: Colors.black87,
           ),
         ),
+      ),
+    );
+  }
+
+  void navigateTo(Widget screen, int animationTime) {
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        transitionDuration: Duration(milliseconds: animationTime),
+        transitionsBuilder: (context, animation, animationTime, child) {
+          return ScaleTransition(
+            alignment: Alignment.center,
+            scale: animation,
+            child: child,
+          );
+        },
+        pageBuilder: (context, animation, animationTime) {
+          return screen;
+        },
       ),
     );
   }

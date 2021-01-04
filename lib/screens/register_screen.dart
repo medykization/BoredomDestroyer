@@ -151,10 +151,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 validatePassword() &&
                 validateEmail() &&
                 validateUsename()) {
-              String token = await signIn();
-              if (token != null) {
-                User user = new User(name: username, token: token);
-                print(user.getName());
+              User user = await signUp();
+              if (user.accessToken != null) {
+                print(user.name);
                 //TO DO: Add user to shared prefs
                 navigateTo(MainScreen(), 200);
               } else {
@@ -195,8 +194,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Future<String> signIn() async {
-    String data;
+  Future<User> signUp() async {
+    User data;
     await httpAuth.signUp(username, email, password).then(
           (val) => setState(
             () {
