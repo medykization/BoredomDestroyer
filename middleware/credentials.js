@@ -6,7 +6,7 @@ function checkIfEmailExist(req, res, next) {
     var checkEmail = db.checkEmail(requser.email);
     checkEmail.then(function(result){
         if(result != null){
-            return res.sendStatus(409);
+            res.locals.emailError = true
         }
         next();
     })
@@ -18,7 +18,7 @@ function checkIfNameExist(req, res, next) {
     var checkName = db.checkName(requser.name); 
     checkName.then(function(result){
         if(result != null){
-            return res.sendStatus(409);
+            res.locals.nameError = true
         }
         next();
     })
