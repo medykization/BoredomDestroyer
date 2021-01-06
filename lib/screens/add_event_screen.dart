@@ -119,8 +119,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
               prefixIcon: Icon(FontAwesomeIcons.book,
                   color: Colors.blueAccent.shade100, size: 20),
               labelText: 'event name'),
-          validator: (input) =>
-              input.isEmpty ? 'Event name can\'t be empty' : null),
+          validator: (input) => input.isEmpty ? 'can\'t be empty' : null),
     );
   }
 
@@ -134,9 +133,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
         onChanged: (value) {
           location = value;
         },
-        validator: (input) => input.length < 30
-            ? 'description must contain at least 30 characters'
-            : null,
+        validator: (input) =>
+            input.length < 30 ? 'must contain at least 30 characters' : null,
         decoration: InputDecoration(
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             prefixIcon: Icon(FontAwesomeIcons.info,
@@ -186,6 +184,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
             labelText: inputDateTimeBegin == null
                 ? 'beginning of the event'
                 : inputDateTimeBegin),
+        validator: (input) =>
+            inputDateTimeBegin == null ? 'can\'t be empty' : null,
       ),
     );
   }
@@ -216,8 +216,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
               prefixIcon: Icon(FontAwesomeIcons.clock,
                   color: Colors.blueAccent.shade100, size: 20),
               labelText: inputDateTimeEnd == null
-                  ? formatDate(DateTime.now())
+                  ? 'end of the event'
                   : inputDateTimeEnd),
+          validator: (input) =>
+              inputDateTimeEnd == null ? 'can\'t be empty' : null,
         ),
       ),
     );
