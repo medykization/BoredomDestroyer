@@ -20,6 +20,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Box box;
 
+  final _formKey = GlobalKey<FormState>();
+
   void initBoxValue() async {
     box = await Hive.openBox<User>('users');
   }
@@ -42,16 +44,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
       body: new Center(
-        child: Column(
-          children: <Widget>[
-            Expanded(flex: 2, child: _buildWelcomeTextRow()),
-            _buildUsernameRow(),
-            _buildEmailRow(),
-            _buildPasswordRow(),
-            _buildCheckBox(),
-            _buildSignUpButton(),
-            Expanded(flex: 1, child: _buildSignInContainer()),
-          ],
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: <Widget>[
+              Expanded(flex: 2, child: _buildWelcomeTextRow()),
+              _buildUsernameRow(),
+              _buildEmailRow(),
+              _buildPasswordRow(),
+              _buildCheckBox(),
+              _buildSignUpButton(),
+              Expanded(flex: 1, child: _buildSignInContainer()),
+            ],
+          ),
         ),
       ),
     );
@@ -89,10 +94,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
           username = value;
         },
         decoration: InputDecoration(
-            prefixIcon: Icon(FontAwesomeIcons.userAlt, color: Colors.blueGrey),
+            prefixIcon: Icon(FontAwesomeIcons.userAlt,
+                color: Colors.blueAccent.shade100),
             labelText: 'username'),
+        validator: (input) => validateUsename() ? 'can\'t be empty' : null,
       ),
     );
+  }
+
+  bool validateUsename() {
+    return username == null || username.length == 0;
   }
 
   Widget _buildEmailRow() {
@@ -104,11 +115,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
           email = value;
         },
         decoration: InputDecoration(
-            prefixIcon:
-                Icon(FontAwesomeIcons.solidEnvelope, color: Colors.blueGrey),
+            prefixIcon: Icon(FontAwesomeIcons.solidEnvelope,
+                color: Colors.blueAccent.shade100),
             labelText: 'e-mail'),
+        validator: (input) => validateEmail() ? 'incorrect e-mail' : null,
       ),
     );
+  }
+
+  bool validateEmail() {
+    if (email == null) return true;
+    bool emailValid = !RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(email);
+    return emailValid;
   }
 
   Widget _buildPasswordRow() {
@@ -123,11 +143,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
         decoration: InputDecoration(
             prefixIcon: Icon(
               FontAwesomeIcons.lock,
-              color: Colors.blueGrey,
+              color: Colors.blueAccent.shade100,
             ),
             labelText: 'password'),
+        validator: (password) =>
+            validatePassword() ? 'must contain at least 8 characters' : null,
       ),
     );
+  }
+
+  bool validatePassword() {
+    print('test');
+    return password == null || password.length < 8;
   }
 
   Widget _buildCheckBox() {
@@ -150,6 +177,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+  bool validateCheckBox() {
+    return checkBoxValue;
+  }
+
   Widget _buildSignUpButton() {
     return Padding(
       padding: EdgeInsets.only(left: 60, right: 60, top: 15),
@@ -160,20 +191,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
         height: 50.0,
         child: FlatButton(
           onPressed: () async {
-            if (checkBoxValue == true &&
-                validatePassword() &&
-                validateEmail() &&
-                validateUsename()) {
-              User user = await signUp();
-              if (user.accessToken != null) {
-                print(user.name);
-                await _addUserDataToHive(user);
-                navigateTo(MainScreen(), 200);
-              } else {
-                print("\nCan't create account");
-              }
-            } else {
-              print("Please accept terms");
+            if (_formKey.currentState.validate() && validateCheckBox()) {
+              // User user = await signUp();
+              // if (user.accessToken != null) {
+              //   print(user.name);
+              //   await _addUserDataToHive(user);
+              //   navigateTo(MainScreen(), 200);
+              // } else {
+              //   print("\nCan't create account");
+              // }
+              print('validation test');
             }
           },
           child: Text(
@@ -236,21 +263,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         },
       ),
     );
-  }
-
-  bool validatePassword() {
-    return password != null && password.length > 8;
-  }
-
-  bool validateUsename() {
-    return username != null && username.length > 8;
-  }
-
-  bool validateEmail() {
-    bool emailValid = RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(email);
-    return emailValid;
   }
 
   _addUserDataToHive(User user) async {
