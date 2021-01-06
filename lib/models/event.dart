@@ -2,7 +2,8 @@ class Event {
   String name;
   String locationCity;
   String locationAddress;
-  int category;
+  int categoryID;
+  String categoryName;
   String dateTimeBegin;
   String dateTimeEnd;
   String description;
@@ -12,7 +13,8 @@ class Event {
       {this.name,
       this.locationCity,
       this.locationAddress,
-      this.category,
+      this.categoryID,
+      this.categoryName,
       this.dateTimeBegin,
       this.dateTimeEnd,
       this.description,
@@ -23,7 +25,8 @@ class Event {
       name: json['event_name'],
       locationCity: json['location_city'],
       locationAddress: json['location_address'],
-      category: json['category_id'],
+      categoryID: json['category_id'],
+      categoryName: json['category_name'],
       dateTimeBegin: json['begin_time'],
       dateTimeEnd: json['end_time'],
       description: json['description'],
@@ -33,6 +36,6 @@ class Event {
 
   @override
   String toString() {
-    return '{ ${this.name}, ${this.locationCity}, ${this.locationAddress}, ${this.category}, ${this.dateTimeBegin}, ${this.dateTimeEnd}, ${this.description}, ${this.userRating} }';
+    return '{ ${this.name}, ${this.locationCity}, ${this.locationAddress}, ${this.categoryID}, ${this.categoryName}, ${this.dateTimeBegin}, ${this.dateTimeEnd}, ${this.description}, ${this.userRating} }';
   }
 }
