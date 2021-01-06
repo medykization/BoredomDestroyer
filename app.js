@@ -5,9 +5,9 @@ const port = process.env.PORT || 3000;
 const authentication = require("./routes/authentication");
 const events = require("./routes/events");
 const { pool } = require("./dbConfig");
+const db = require('./controller/db');
 
 app.use(express.json());
-
 app.get('/db', async (req, res) => {
     try {
       const client = await pool.connect();
@@ -21,7 +21,13 @@ app.get('/db', async (req, res) => {
     }
 });
 
-app.listen(port, () => console.log("Server is running"));
+function databaseCleaner() {
+  db.deleteOutdatedEvents().then()
+}
+
+app.listen(port, () => console.log("Server is running"), () => {
+  setInterval(databaseCleaner, 3600000)
+});
 
 app.use("/authentication", authentication);
 app.use("/events", events);

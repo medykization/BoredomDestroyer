@@ -134,7 +134,6 @@ async function checkName(value) {
         const client = await pool.connect();
         const result = await client.query("SELECT user_name FROM user_account WHERE user_name = $1", [value]);
         const results = { 'results': (result) ? result.rows : null};
-
         if(result.rows[0] != null){
             client.release();
             return results;
@@ -143,7 +142,6 @@ async function checkName(value) {
             client.release();
             return null;
         }
-
     }catch (err) {
         return null;
     }
@@ -190,12 +188,23 @@ async function insertUser(username, email, password) {
     }
 };
 
+async function deleteOutdatedEvents() {
+    try {
+        const client = await pool.connect();
+        const deleteQuery = "DELETE FROM event WHERE end_time < NOW() - INTERVAL '1' MINUTE";
+        await client.query(deleteQuery);
+    }catch (err) {
+        return null;
+    }
+};
+
+exports.deleteOutdatedEvents = deleteOutdatedEvents
 exports.getEventCategoryId = getEventCategoryId
 exports.getUserIdFromName = getUserIdFromName
 exports.getLocalEvents = getLocalEvents
+exports.getCategories = getCategories
 exports.insertEvent = insertEvent
-exports.checkUser = checkUser
 exports.checkEmail = checkEmail
 exports.insertUser = insertUser
+exports.checkUser = checkUser
 exports.checkName = checkName
-exports.getCategories = getCategories
