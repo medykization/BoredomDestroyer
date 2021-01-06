@@ -9,7 +9,7 @@ class EventsApi {
       "https://boredom-server.herokuapp.com/events/local";
 
   Future<List<Event>> getEventsNearby(String city) async {
-    List<Event> results = new List.empty();
+    List<Event> results = [];
 
     Map cityMap = {'city': city};
     String body = convert.json.encode(cityMap);

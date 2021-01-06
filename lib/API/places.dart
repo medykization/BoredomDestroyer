@@ -15,10 +15,10 @@ class PlacesApi {
   Future<List<Place>> getNearbyPlaces(
       int radius, Location location, Set<String> preferences) async {
     //origin varible to distance request
-    List<Location> origin = new List.empty();
+    List<Location> origin = [];
     origin.add(location);
 
-    List<Place> results = new List.empty();
+    List<Place> results = [];
     try {
       for (String val in preferences) {
         PlacesSearchResponse response = await places.searchNearbyWithRadius(
@@ -44,7 +44,7 @@ class PlacesApi {
                   location: next.geometry.location);
 
               //destination varible to distance request
-              List<Location> destination = new List.empty();
+              List<Location> destination = [];
               destination.add(new Location(
                   next.geometry.location.lat, next.geometry.location.lng));
 
@@ -75,7 +75,7 @@ class PlacesApi {
 
   List<String> getCategories() {
     // DATA FOR TESTING
-    List<String> categories = new List.empty();
+    List<String> categories = [];
     categories.add("cinema");
     categories.add("cafe");
     categories.add("club");

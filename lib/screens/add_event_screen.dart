@@ -30,6 +30,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   FocusNode dateTimeFocusNode;
 
+  var beginDTtextController = new TextEditingController();
+  var endDTtextController = new TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -47,7 +50,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
   }
 
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
-    List<DropdownMenuItem<String>> items = new List.empty();
+    List<DropdownMenuItem<String>> items = [];
     for (String city in _categories) {
       // here we are creating the drop down menu items, you can customize the item right here
       // but I'll just use a simple text for this
@@ -90,6 +93,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 _buildLocationRow(),
                 Divider(height: 20),
                 _buildEventNameRow(),
+                Divider(height: 20),
+                _buildCategoryRow(),
                 Divider(height: 20),
                 _buildDateTimeBeginRow(),
                 Divider(height: 20),
@@ -165,13 +170,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: TextFormField(
+        controller: beginDTtextController,
         onTap: () {
           DatePicker.showDateTimePicker(context, showTitleActions: true,
               onConfirm: (date) {
             setState(() {
               inputDateTimeBegin = formatDate(date);
             });
-            print('confirm $date');
+            beginDTtextController.text = inputDateTimeBegin;
           }, currentTime: DateTime.now(), locale: LocaleType.pl);
           FocusScope.of(context).requestFocus(new FocusNode());
         },
@@ -181,9 +187,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             prefixIcon: Icon(FontAwesomeIcons.clock,
                 color: Colors.blueAccent.shade100, size: 20),
-            labelText: inputDateTimeBegin == null
-                ? 'beginning of the event'
-                : inputDateTimeBegin),
+            labelText: 'beginning of the event'),
         validator: (input) =>
             inputDateTimeBegin == null ? 'can\'t be empty' : null,
       ),
@@ -196,31 +200,37 @@ class _AddEventScreenState extends State<AddEventScreen> {
       child: Theme(
         data: ThemeData(disabledColor: Colors.blueAccent),
         child: TextFormField(
-          autofocus: false,
-          onTap: () {
-            DatePicker.showDateTimePicker(context, showTitleActions: true,
-                onConfirm: (date) {
-              setState(() {
-                inputDateTimeEnd = formatDate(date);
-              });
-              print('confirm $date');
-            }, currentTime: DateTime.now(), locale: LocaleType.pl);
-            FocusScope.of(context).requestFocus(new FocusNode());
-          },
-          readOnly: true,
-          focusNode: dateTimeFocusNode,
-          keyboardType: TextInputType.datetime,
-          decoration: InputDecoration(
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              prefixIcon: Icon(FontAwesomeIcons.clock,
-                  color: Colors.blueAccent.shade100, size: 20),
-              labelText: inputDateTimeEnd == null
-                  ? 'end of the event'
-                  : inputDateTimeEnd),
-          validator: (input) =>
-              inputDateTimeEnd == null ? 'can\'t be empty' : null,
-        ),
+            controller: endDTtextController,
+            autofocus: false,
+            onTap: () {
+              DatePicker.showDateTimePicker(context, showTitleActions: true,
+                  onConfirm: (date) {
+                setState(() {
+                  inputDateTimeEnd = formatDate(date);
+                });
+                endDTtextController.text = inputDateTimeEnd;
+              }, currentTime: DateTime.now(), locale: LocaleType.pl);
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
+            readOnly: true,
+            focusNode: dateTimeFocusNode,
+            keyboardType: TextInputType.datetime,
+            decoration: InputDecoration(
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                prefixIcon: Icon(FontAwesomeIcons.clock,
+                    color: Colors.blueAccent.shade100, size: 20),
+                labelText: 'end of the event'),
+            validator: (input) {
+              String errorText;
+              if (inputDateTimeEnd == null) {
+                errorText = 'can\'t be empty';
+              } else if (DateTime.parse(inputDateTimeEnd)
+                  .isBefore(DateTime.parse(inputDateTimeBegin))) {
+                return 'the end must be after the beginning';
+              }
+              return errorText;
+            }),
       ),
     );
   }
@@ -237,13 +247,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         textColor: Colors.white,
         onPressed: () {
           if (_formKey.currentState.validate()) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('VALID',
-                  style: TextStyle(
-                    color: Colors.black,
-                  )),
-              backgroundColor: Colors.grey,
-            ));
+            print('validation test');
           }
         },
         child: Text('SUBMIT'),
@@ -251,22 +255,21 @@ class _AddEventScreenState extends State<AddEventScreen> {
     );
   }
 
-  String formatDate(DateTime dateTime) {
-    return DateFormat('yyyy-MM-dd kk:mm').format(dateTime);
-  }
-
-  // OLD
-
-  // ignore: unused_element
-  Widget _buildCategoryRowNew() {
+  Widget _buildCategoryRow() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 150, vertical: 50),
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: FormField<String>(
         builder: (FormFieldState<String> state) {
           return InputDecorator(
             decoration: InputDecoration(
+              labelText: 'Category',
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              prefixIcon: Icon(
+                Icons.ac_unit,
+                color: Colors.blueAccent.shade100,
+              ),
               labelStyle: null,
-              errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
             ),
             isEmpty: _currentSelectedCategory == '',
             child: DropdownButtonHideUnderline(
@@ -291,5 +294,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
         },
       ),
     );
+  }
+
+  String formatDate(DateTime dateTime) {
+    return DateFormat('yyyy-MM-dd kk:mm').format(dateTime);
   }
 }
