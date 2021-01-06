@@ -26,11 +26,24 @@ List<String> _categories = [
 List<DropdownMenuItem<String>> _dropDownMenuItems;
 
 class _AddEventScreenState extends State<AddEventScreen> {
+  final _formKey = GlobalKey<FormState>();
+
+  FocusNode dateTimeFocusNode;
+
   @override
   void initState() {
+    super.initState();
     _dropDownMenuItems = getDropDownMenuItems();
     category = _dropDownMenuItems[0].value;
-    super.initState();
+    dateTimeFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    // Clean up the focus node when the Form is disposed.
+    dateTimeFocusNode.dispose();
+
+    super.dispose();
   }
 
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
@@ -67,18 +80,26 @@ class _AddEventScreenState extends State<AddEventScreen> {
         backgroundColor: Colors.blueAccent,
         title: Text('Add Event'),
       ),
-      body: SingleChildScrollView(
-        child: new Center(
-          child: Column(
-            children: <Widget>[
-              _buildCategoryRowNew(),
-              _buildLocationRow(),
-              _buildEventNameRow(),
-              _buildDateTimeBeginRow(),
-              _buildDateTimeEndRow(),
-              _buildDescriptionRow(),
-              _buildPublishButton(),
-            ],
+      body: new Center(
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                _buildLocationRow(),
+                Divider(height: 20),
+                _buildEventNameRow(),
+                Divider(height: 20),
+                _buildDateTimeBeginRow(),
+                Divider(height: 20),
+                _buildDateTimeEndRow(),
+                Divider(height: 20),
+                _buildDescriptionRow(),
+                Divider(height: 40),
+                _buildPublishButton(),
+              ],
+            ),
           ),
         ),
       ),
@@ -87,26 +108,52 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   Widget _buildEventNameRow() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 60.0),
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: TextFormField(
-        keyboardType: TextInputType.text,
+          onChanged: (value) {
+            eventName = value;
+          },
+          decoration: InputDecoration(
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              prefixIcon: Icon(FontAwesomeIcons.book,
+                  color: Colors.blueAccent.shade100, size: 20),
+              labelText: 'event name'),
+          validator: (input) =>
+              input.isEmpty ? 'Event name can\'t be empty' : null),
+    );
+  }
+
+  Widget _buildDescriptionRow() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
+      child: TextFormField(
+        keyboardType: TextInputType.multiline,
+        maxLength: 254,
+        maxLines: null,
         onChanged: (value) {
-          eventName = value;
+          location = value;
         },
+        validator: (input) => input.length < 30
+            ? 'description must contain at least 30 characters'
+            : null,
         decoration: InputDecoration(
-            prefixIcon: Icon(FontAwesomeIcons.bookmark, color: Colors.blueGrey),
-            labelText: 'event name'),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+            prefixIcon: Icon(FontAwesomeIcons.info,
+                color: Colors.blueAccent.shade100, size: 20),
+            labelText: 'description'),
       ),
     );
   }
 
   Widget _buildLocationRow() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 60.0),
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: SearchMapPlaceWidget(
+        iconColor: Colors.blueAccent.shade100,
         hasClearButton: true,
         placeType: PlaceType.address,
-        placeholder: 'Enter event location',
+        placeholder: 'event location',
         language: 'pl',
         apiKey: _apiKey,
         onSelected: (Place place) {
@@ -118,50 +165,56 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   Widget _buildDateTimeBeginRow() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 45.0),
-      child: FlatButton(
-        onPressed: () {
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
+      child: TextFormField(
+        onTap: () {
           DatePicker.showDateTimePicker(context, showTitleActions: true,
               onConfirm: (date) {
-            //TO DO ON CONFIRM
             setState(() {
               inputDateTimeBegin = formatDate(date);
             });
             print('confirm $date');
           }, currentTime: DateTime.now(), locale: LocaleType.pl);
+          FocusScope.of(context).requestFocus(new FocusNode());
         },
-        child: TextFormField(
-          enabled: false,
-          keyboardType: TextInputType.text,
-          decoration: InputDecoration(
-              prefixIcon: Icon(FontAwesomeIcons.clock, color: Colors.blueGrey),
-              labelText: inputDateTimeBegin == null
-                  ? formatDate(DateTime.now())
-                  : inputDateTimeBegin),
-        ),
+        readOnly: true,
+        keyboardType: TextInputType.text,
+        decoration: InputDecoration(
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+            prefixIcon: Icon(FontAwesomeIcons.clock,
+                color: Colors.blueAccent.shade100, size: 20),
+            labelText: inputDateTimeBegin == null
+                ? 'beginning of the event'
+                : inputDateTimeBegin),
       ),
     );
   }
 
   Widget _buildDateTimeEndRow() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 45.0),
-      child: FlatButton(
-        onPressed: () {
-          DatePicker.showDateTimePicker(context, showTitleActions: true,
-              onConfirm: (date) {
-            //TO DO ON CONFIRM
-            setState(() {
-              inputDateTimeEnd = formatDate(date);
-            });
-            print('confirm $date');
-          }, currentTime: DateTime.now(), locale: LocaleType.pl);
-        },
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
+      child: Theme(
+        data: ThemeData(disabledColor: Colors.blueAccent),
         child: TextFormField(
-          enabled: false,
-          keyboardType: TextInputType.text,
+          autofocus: false,
+          onTap: () {
+            DatePicker.showDateTimePicker(context, showTitleActions: true,
+                onConfirm: (date) {
+              setState(() {
+                inputDateTimeEnd = formatDate(date);
+              });
+              print('confirm $date');
+            }, currentTime: DateTime.now(), locale: LocaleType.pl);
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
+          readOnly: true,
+          focusNode: dateTimeFocusNode,
+          keyboardType: TextInputType.datetime,
           decoration: InputDecoration(
-              prefixIcon: Icon(FontAwesomeIcons.clock, color: Colors.blueGrey),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              prefixIcon: Icon(FontAwesomeIcons.clock,
+                  color: Colors.blueAccent.shade100, size: 20),
               labelText: inputDateTimeEnd == null
                   ? formatDate(DateTime.now())
                   : inputDateTimeEnd),
@@ -170,22 +223,39 @@ class _AddEventScreenState extends State<AddEventScreen> {
     );
   }
 
-  Widget _buildDescriptionRow() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 60.0),
-      child: TextFormField(
-        keyboardType: TextInputType.multiline,
-        maxLines: null,
-        onChanged: (value) {
-          location = value;
+  Widget _buildPublishButton() {
+    return ButtonTheme(
+      shape: new RoundedRectangleBorder(
+          borderRadius: new BorderRadius.circular(10)),
+      minWidth: 100.0,
+      height: 50.0,
+      child: FlatButton(
+        height: 43,
+        color: Colors.blueAccent,
+        textColor: Colors.white,
+        onPressed: () {
+          if (_formKey.currentState.validate()) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('VALID',
+                  style: TextStyle(
+                    color: Colors.black,
+                  )),
+              backgroundColor: Colors.grey,
+            ));
+          }
         },
-        decoration: InputDecoration(
-            prefixIcon: Icon(FontAwesomeIcons.info, color: Colors.blueGrey),
-            labelText: 'description'),
+        child: Text('SUBMIT'),
       ),
     );
   }
 
+  String formatDate(DateTime dateTime) {
+    return DateFormat('yyyy-MM-dd kk:mm').format(dateTime);
+  }
+
+  // OLD
+
+  // ignore: unused_element
   Widget _buildCategoryRowNew() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 150, vertical: 50),
@@ -219,50 +289,5 @@ class _AddEventScreenState extends State<AddEventScreen> {
         },
       ),
     );
-  }
-
-  Widget _buildPublishButton() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 50, horizontal: 130),
-      child: ButtonTheme(
-        shape: new RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(10)),
-        minWidth: 500.0,
-        height: 50.0,
-        child: FlatButton(
-          onPressed: () async {
-            print("test dodawania eventów: " + _currentSelectedCategory);
-          },
-          child: Text(
-            'Publish',
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          color: Colors.blueAccent,
-        ),
-      ),
-    );
-  }
-
-  void navigateTo(Widget screen, int animationTime) {
-    Navigator.pushReplacement(
-      context,
-      PageRouteBuilder(
-        transitionDuration: Duration(milliseconds: animationTime),
-        transitionsBuilder: (context, animation, animationTime, child) {
-          return ScaleTransition(
-            alignment: Alignment.center,
-            scale: animation,
-            child: child,
-          );
-        },
-        pageBuilder: (context, animation, animationTime) {
-          return screen;
-        },
-      ),
-    );
-  }
-
-  String formatDate(DateTime dateTime) {
-    return DateFormat('yyyy-MM-dd kk:mm').format(dateTime);
   }
 }
