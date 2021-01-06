@@ -50,7 +50,7 @@ router.post('/add', auth.authenticateToken, (req, res) => {
             var check = db.insertEvent(event);
             check.then(function(result){
                 if(result != null) {
-                    res.json(result)
+                    res.sendStatus(200)
                 }
                 else {
                     res.sendStatus(400)
