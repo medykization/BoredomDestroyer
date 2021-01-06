@@ -18,6 +18,8 @@ class _LoginScreenState extends State<LoginScreen> {
   HttpAuth httpAuth = new HttpAuth();
   Box box;
 
+  bool cantLoginFlag;
+
   void initBoxValue() async {
     box = await Hive.openBox<User>('users');
   }
@@ -25,6 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     initBoxValue();
+    cantLoginFlag = false;
     super.initState();
   }
 
@@ -42,9 +45,10 @@ class _LoginScreenState extends State<LoginScreen> {
       body: new Center(
         child: Column(
           children: <Widget>[
-            Expanded(flex: 3, child: _buildWelcomeTextRow()),
+            Expanded(flex: 5, child: _buildWelcomeTextRow()),
             _buildUsernameRow(),
             _buildPasswordRow(),
+            _buildErrorText(),
             _buildForgetPasswordButton(),
             _buildSignInButton(),
             _buildOrContainer(),
@@ -133,11 +137,17 @@ class _LoginScreenState extends State<LoginScreen> {
         child: FlatButton(
           onPressed: () async {
             User user = await signIn();
-            if (user.accessToken != null) {
-              await _addUserDataToHive(user);
-              navigateTo(MainScreen(), 200);
+            if (user != null) {
+              if (user.accessToken != null) {
+                await _addUserDataToHive(user);
+                navigateTo(MainScreen(), 200);
+              } else {
+                cantLoginFlag = true;
+                print('cant');
+              }
             } else {
-              print("\nCan't log in");
+              cantLoginFlag = true;
+              print('cant');
             }
           },
           child: Text(
@@ -147,6 +157,36 @@ class _LoginScreenState extends State<LoginScreen> {
           color: Colors.blueAccent,
         ),
       ),
+    );
+  }
+
+  Widget _buildErrorText() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 15),
+      child: Center(
+          child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (cantLoginFlag)
+            Row(
+              children: [
+                Icon(
+                  Icons.warning,
+                  color: Colors.red,
+                  size: 17,
+                ),
+                Text(
+                  '  Incorrect login and / or password.',
+                  style: TextStyle(color: Colors.redAccent),
+                ),
+              ],
+            )
+          else
+            Row(
+              children: [Icon(Icons.warning, color: Colors.white, size: 17)],
+            ),
+        ],
+      )),
     );
   }
 
