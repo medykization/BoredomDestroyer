@@ -34,7 +34,7 @@ class EventsApi {
 
       results = jsonResponse.map((val) => Event.fromJson(val)).toList();
 
-      print(results.toString());
+      //print(results.toString());
     } catch (e) {
       print(e.toString());
     }
