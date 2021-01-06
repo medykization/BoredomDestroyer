@@ -133,9 +133,8 @@ class _LoginScreenState extends State<LoginScreen> {
         child: FlatButton(
           onPressed: () async {
             User user = await signIn();
-
             if (user.accessToken != null) {
-              _addUserDataToHive(user);
+              await _addUserDataToHive(user);
               navigateTo(MainScreen(), 200);
             } else {
               print("\nCan't log in");

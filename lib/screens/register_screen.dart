@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/screens/login_screen.dart';
 import 'package:flutter_project/screens/main_screen.dart';
+import 'package:hive/hive.dart';
 import 'elements/rounded_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_project/API/auth.dart';
@@ -16,6 +17,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool checkBoxValue = false;
 
   HttpAuth httpAuth = new HttpAuth();
+
+  Box box;
+
+  void initBoxValue() async {
+    box = await Hive.openBox<User>('users');
+  }
+
+  @override
+  void initState() {
+    initBoxValue();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +167,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               User user = await signUp();
               if (user.accessToken != null) {
                 print(user.name);
-                //TO DO: Add user to shared prefs
+                await _addUserDataToHive(user);
                 navigateTo(MainScreen(), 200);
               } else {
                 print("\nCan't create account");
@@ -226,17 +239,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   bool validatePassword() {
-    // TO DO
-    return password != null;
+    return password != null && password.length > 8;
   }
 
   bool validateUsename() {
-    // TO DO
-    return username != null;
+    return username != null && username.length > 8;
   }
 
   bool validateEmail() {
-    // TO DO
-    return email != null;
+    bool emailValid = RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(email);
+    return emailValid;
+  }
+
+  _addUserDataToHive(User user) async {
+    await box.put("user", user);
+    await box.close();
   }
 }

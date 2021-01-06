@@ -47,7 +47,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
   }
 
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
-    List<DropdownMenuItem<String>> items = new List();
+    List<DropdownMenuItem<String>> items = new List.empty();
     for (String city in _categories) {
       // here we are creating the drop down menu items, you can customize the item right here
       // but I'll just use a simple text for this

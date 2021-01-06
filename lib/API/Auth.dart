@@ -9,6 +9,10 @@ class HttpAuth {
       'https://boredom-server.herokuapp.com/authentication/refresh';
   static const signUpURL =
       'https://boredom-server.herokuapp.com/authentication/registration';
+  static const checkNameURL =
+      'https://boredom-server.herokuapp.com/authentication/username';
+  static const checkEmailURL =
+      'https://boredom-server.herokuapp.com/authentication/email';
 
   Future<User> signIn(String username, String password) async {
     Map userMap = {'name': username, 'password': password};
@@ -20,8 +24,6 @@ class HttpAuth {
             'Content-Type': 'application/json; charset=UTF-8',
           },
           body: body);
-
-      print(response.statusCode);
 
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
       User result = new User(
@@ -77,6 +79,46 @@ class HttpAuth {
       String result = jsonResponse['accessToken'];
 
       return result;
+    } on FormatException {
+      return null;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<bool> checkUsername(String username) async {
+    Map userMap = {'name': username};
+    String body = convert.json.encode(userMap);
+
+    try {
+      http.Response response = await http.post(checkNameURL,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: body);
+
+      if (response.statusCode == 200) return true;
+      return false;
+    } on FormatException {
+      return null;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<bool> checkEmail(String email) async {
+    Map userMap = {'name': email};
+    String body = convert.json.encode(userMap);
+
+    try {
+      http.Response response = await http.post(checkNameURL,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: body);
+
+      if (response.statusCode == 200) return true;
+      return false;
     } on FormatException {
       return null;
     } catch (e) {
