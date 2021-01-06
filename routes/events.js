@@ -45,25 +45,12 @@ router.post('/add', auth.authenticateToken, (req, res) => {
             var user_id = result.results[0].id;
             const body = req.body
 
-            var category_id
-            var categoryID = db.getEventCategoryId(body.category_name);
-            categoryID.then(function(result){
+            var event = new Event(user_id,body.event_name,body.category_id,body.description,
+                body.location_city,body.location_address,body.begin_time,body.end_time,0)
+            var check = db.insertEvent(event);
+            check.then(function(result){
                 if(result != null) {
-                    console.log(result.results[0].id);
-                    category_id = result.results[0].id;
-                    
-                    var event = new Event(user_id,body.event_name,category_id,body.description,
-                        body.location_city,body.location_address,body.begin_time,body.end_time,0)
-                    var check = db.insertEvent(event);
-                    check.then(function(result){
-                        if(result != null) {
-                            res.json(result)
-                        }
-                        else {
-                            res.sendStatus(400)
-                        }
-                    })
-
+                    res.json(result)
                 }
                 else {
                     res.sendStatus(400)
