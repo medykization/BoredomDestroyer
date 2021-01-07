@@ -1,3 +1,4 @@
+import 'package:flutter_project/API/auth.dart';
 import 'package:flutter_project/models/event.dart';
 import 'package:flutter_project/models/user.dart';
 import 'package:hive/hive.dart';
@@ -27,17 +28,33 @@ class EventsApi {
           },
           body: body);
 
-      var jsonResponse = convert.json.decode(response.body)['results'] as List;
-      results = jsonResponse.map((val) => Event.fromJson(val)).toList();
+      print(response.statusCode);
 
-      print("getEventsNearby():" + response.statusCode.toString());
+      if (response.statusCode == 403) {
+        await refreshToken(user, box, city);
+      } else {
+        var jsonResponse =
+            convert.json.decode(response.body)['results'] as List;
+        results = jsonResponse.map((val) => Event.fromJson(val)).toList();
+      }
     } catch (e) {
       print(e.toString());
     }
     return results;
   }
 
-  Future<bool> addEvent(Event event) async {
+  Future refreshToken(User user, Box box, String city) async {
+    HttpAuth httpAuth = new HttpAuth();
+    String accessToken = await httpAuth.refreshToken(user);
+    print(accessToken);
+    if (accessToken != null) {
+      user.accessToken = accessToken;
+      await box.put('user', user);
+      this.getEventsNearby(city);
+    }
+  }
+
+  Future<void> addEvent(Event event) async {
     // Get body
     Map eventMap = {
       'event_name': event.name,
@@ -55,7 +72,6 @@ class EventsApi {
     // Get token
     Box box = await Hive.openBox<User>('users');
     User user = await box.get('user');
-    await box.close();
 
     String token = user.accessToken;
 

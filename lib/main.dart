@@ -5,10 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_project/screens/main_screen.dart';
 import 'package:flutter_project/screens/splash_screen.dart';
 import 'dart:async';
-
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
 import 'models/user.dart';
 
 void main() {
@@ -19,7 +17,6 @@ void main() {
       systemNavigationBarIconBrightness: Brightness.dark,
     ),
   ); // Transparant Statusbar
-
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -33,7 +30,6 @@ void main() {
 }
 
 class Application extends StatefulWidget {
-  // This widget is the root of application.
   _AppState createState() => _AppState();
 }
 
