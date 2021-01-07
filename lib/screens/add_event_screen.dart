@@ -278,7 +278,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
               inputEventLocationCity.isNotEmpty) {
             Event event = new Event(
               name: inputEventName,
-              categoryID: inputCategoryID, // FOR TESTING
+              categoryID: inputCategoryID,
               categoryName: inputEventCategory,
               description: inputEventDescription,
               locationCity: inputEventLocationCity,

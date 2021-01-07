@@ -70,7 +70,7 @@ class EventsApi {
           },
           body: body);
 
-      print("Event Added. " +
+      print("Add Event: . " +
           "Status Code:" +
           response.statusCode.toString()); // for debugging
       print(body);
