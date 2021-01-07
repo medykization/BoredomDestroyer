@@ -88,7 +88,8 @@ class _LoginScreenState extends State<LoginScreen> {
           username = value;
         },
         decoration: InputDecoration(
-            prefixIcon: Icon(FontAwesomeIcons.userAlt, color: Colors.blueGrey),
+            prefixIcon: Icon(FontAwesomeIcons.userAlt,
+                color: Colors.blueAccent.shade100),
             labelText: 'username'),
       ),
     );
@@ -106,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
         decoration: InputDecoration(
             prefixIcon: Icon(
               FontAwesomeIcons.lock,
-              color: Colors.blueGrey,
+              color: Colors.blueAccent.shade100,
             ),
             labelText: 'password'),
       ),
