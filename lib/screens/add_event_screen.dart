@@ -272,7 +272,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         height: 43,
         color: Colors.blueAccent,
         textColor: Colors.white,
-        onPressed: () {
+        onPressed: () async {
           if (_formKey.currentState.validate() &&
               inputEventLocationAddress.isNotEmpty &&
               inputEventLocationCity.isNotEmpty) {
@@ -287,7 +287,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
               dateTimeEnd: inputEndTime,
               userRating: 0,
             );
-            eventsApi.addEvent(event);
+            eventsApi.addEvent(event).then((value) => {
+                  if (value) {Navigator.pop(context)}
+                });
           }
         },
         child: Text('SUBMIT'),

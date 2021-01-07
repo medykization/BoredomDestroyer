@@ -37,7 +37,7 @@ class EventsApi {
     return results;
   }
 
-  Future<void> addEvent(Event event) async {
+  Future<bool> addEvent(Event event) async {
     // Get body
     Map eventMap = {
       'event_name': event.name,
@@ -71,9 +71,10 @@ class EventsApi {
       print("Add Event: . " +
           "Status Code:" +
           response.statusCode.toString()); // for debugging
-      print(body);
+      return response.statusCode == 200;
     } catch (e) {
       print(e.toString());
+      return false;
     }
   }
 }
