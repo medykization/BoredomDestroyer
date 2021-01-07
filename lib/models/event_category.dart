@@ -4,7 +4,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class EventCategory {
   int id;
   String name;
-  String namePL;
   IconData iconData;
 
   EventCategory(int id, String name, IconData iconData) {
