@@ -17,8 +17,6 @@ class EventsApi {
 
     Box box = await Hive.openBox<User>('users');
     User user = await box.get('user');
-    await box.close();
-
     String token = user.accessToken;
 
     try {
