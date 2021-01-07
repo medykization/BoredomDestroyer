@@ -12,9 +12,12 @@ class AddEventScreen extends StatefulWidget {
   _AddEventScreenState createState() => _AddEventScreenState();
 }
 
-String inputEventName, inputEventLocation, inputEventDescription;
+String inputEventName,
+    inputEventLocationCity,
+    inputEventLocationAddress,
+    inputEventDescription;
 DateTime inputBeginTime, inputEndTime;
-String category;
+String inputEventCategory;
 
 var _currentSelectedCategory;
 
@@ -41,7 +44,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
   void initState() {
     super.initState();
     _dropDownMenuItems = getDropDownMenuItems();
-    category = _dropDownMenuItems[0].value;
+    inputEventCategory = _dropDownMenuItems[0].value;
     dateTimeFocusNode = FocusNode();
   }
 
@@ -65,7 +68,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   void changedDropDownItem(String selectedCategory) {
     setState(() {
-      category = selectedCategory;
+      inputEventCategory = selectedCategory;
     });
   }
 
@@ -137,7 +140,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: TextFormField(
         keyboardType: TextInputType.multiline,
-        maxLength: 254,
+        maxLength: 250,
         maxLines: null,
         onChanged: (value) {
           inputEventDescription = value;
@@ -164,7 +167,21 @@ class _AddEventScreenState extends State<AddEventScreen> {
         language: 'pl',
         apiKey: _apiKey,
         onSelected: (Place place) {
-          //print(place.fullJSON);
+          List<String> splitted = place.description.split(", ");
+          if (splitted.length == 0) {
+            inputEventLocationAddress = '';
+            inputEventLocationCity = '';
+          } else if (splitted.length == 1) {
+            inputEventLocationCity = splitted[0];
+            inputEventLocationAddress = '';
+          } else {
+            inputEventLocationAddress = splitted[0];
+            inputEventLocationCity = splitted[1];
+          }
+          print('City: ' +
+              inputEventLocationCity +
+              '\nAddress: ' +
+              inputEventLocationAddress);
         },
       ),
     );
@@ -253,16 +270,16 @@ class _AddEventScreenState extends State<AddEventScreen> {
         textColor: Colors.white,
         onPressed: () {
           if (_formKey.currentState.validate()) {
-            //print(startTime.toString());
             Event event = new Event(
               name: inputEventName,
               categoryID: 1, // FOR TESTING
-              categoryName: category,
+              categoryName: inputEventCategory,
               description: inputEventDescription,
-              locationCity: "Łódź", // FOR TESTING
-              locationAddress: "Piotrkowska 20", // FOR TESTING
+              locationCity: inputEventLocationCity,
+              locationAddress: inputEventLocationAddress,
               dateTimeBegin: "2020-01-27T20:00:00.000Z",
               dateTimeEnd: "2020-01-27T22:00:00.000Z",
+              userRating: 0,
             );
             eventsApi.addEvent(event);
           }
