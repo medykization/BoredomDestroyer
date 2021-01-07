@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/models/user.dart';
 import 'package:flutter_project/screens/login_screen.dart';
+import 'package:flutter_project/screens/main_screen.dart';
 import 'package:hive/hive.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -128,6 +131,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         onPressed: () async {
           Box box = await Hive.openBox<User>('users');
           await box.clear();
+          await box.close();
           navigateTo(LoginScreen(), 200);
         },
         child: Text(

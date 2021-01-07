@@ -290,6 +290,5 @@ class _LoginScreenState extends State<LoginScreen> {
 
   _addUserDataToHive(User user) async {
     await box.put("user", user);
-    await box.close();
   }
 }

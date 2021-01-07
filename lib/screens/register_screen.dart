@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/screens/login_screen.dart';
-import 'package:flutter_project/screens/main_screen.dart';
 import 'package:hive/hive.dart';
 import 'elements/rounded_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -89,22 +88,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 60),
       child: TextFormField(
-        keyboardType: TextInputType.text,
-        onChanged: (value) {
-          username = value;
-        },
-        decoration: InputDecoration(
-            prefixIcon: Icon(FontAwesomeIcons.userAlt,
-                color: Colors.blueAccent.shade100),
-            labelText: 'username'),
-        validator: (input) => validateUsename() ? 'can\'t be empty' : null,
-      ),
+          keyboardType: TextInputType.text,
+          onChanged: (value) {
+            username = value;
+          },
+          decoration: InputDecoration(
+              prefixIcon: Icon(FontAwesomeIcons.userAlt,
+                  color: Colors.blueAccent.shade100),
+              labelText: 'username'),
+          validator: (input) {
+            String errorText;
+            if (validateUsername()) {
+              errorText = 'can\'t be empty';
+            }
+            /*  else if (await isUsernameOccupied()) {
+              errorText = 'This username is already taken';
+            }
+            */
+            return errorText;
+          }
+          /* (input) => validateUsername() ? 'can\'t be empty' : null, */
+          ),
     );
   }
 
-  bool validateUsename() {
+  bool validateUsername() {
     return username == null || username.length == 0;
   }
+  /*
+  Future<bool> isUsernameOccupied() async {
+    return await httpAuth.checkUsername(username);
+  }
+  */
 
   Widget _buildEmailRow() {
     return Padding(
@@ -131,6 +146,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return emailValid;
   }
 
+  Future<bool> isEmailOccupied() async {
+    return await httpAuth.checkEmail(email);
+  }
+
   Widget _buildPasswordRow() {
     return Padding(
       padding: EdgeInsets.only(top: 10, left: 60, right: 60),
@@ -153,7 +172,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   bool validatePassword() {
-    print('test');
     return password == null || password.length < 8;
   }
 
@@ -267,6 +285,5 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   _addUserDataToHive(User user) async {
     await box.put("user", user);
-    await box.close();
   }
 }
