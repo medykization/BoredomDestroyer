@@ -128,7 +128,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         onPressed: () async {
           Box box = await Hive.openBox<User>('users');
           await box.clear();
-          navigateTo(LoginScreen(), 200);
+          navigateAndClearRoutes(LoginScreen(), 200);
         },
         child: Text(
           'Sign Out',
@@ -142,8 +142,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  void navigateTo(Widget screen, int animationTime) {
-    Navigator.pushReplacement(
+  void navigateAndClearRoutes(Widget screen, int animationTime) {
+    Navigator.pushAndRemoveUntil(
       context,
       PageRouteBuilder(
         transitionDuration: Duration(milliseconds: animationTime),
@@ -158,6 +158,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           return screen;
         },
       ),
+      (route) => false,
     );
   }
 }
