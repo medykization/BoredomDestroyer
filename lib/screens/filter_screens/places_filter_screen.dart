@@ -97,7 +97,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
           },
           child: Text(
             'Search',
-            style: TextStyle(color: Colors.white, fontSize: 20),
+            style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           color: Colors.blueAccent,
         ),
