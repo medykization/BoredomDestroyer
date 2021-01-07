@@ -5,12 +5,12 @@ class EventCategory {
   int id;
   String name;
   String namePL;
-  Icon icon;
+  IconData iconData;
 
-  EventCategory(int id, String name, Icon icon) {
+  EventCategory(int id, String name, IconData iconData) {
     this.id = id;
     this.name = name;
-    this.icon = icon;
+    this.iconData = iconData;
   }
 
   @override
@@ -21,118 +21,20 @@ class EventCategory {
 
 class EventCategories {
   final List<EventCategory> categories = [
-    EventCategory(
-      1,
-      'tournament',
-      Icon(
-        FontAwesomeIcons.trophy,
-        color: Colors.blueAccent.shade100,
-      ),
-    ),
-    EventCategory(
-      2,
-      'party',
-      Icon(
-        FontAwesomeIcons.glassCheers,
-        color: Colors.blueAccent.shade100,
-      ),
-    ),
-    EventCategory(
-      3,
-      'concert',
-      Icon(
-        FontAwesomeIcons.guitar,
-        color: Colors.blueAccent.shade100,
-      ),
-    ),
-    EventCategory(
-      4,
-      'festival',
-      Icon(
-        FontAwesomeIcons.icons,
-        color: Colors.blueAccent.shade100,
-      ),
-    ),
-    EventCategory(
-      5,
-      'conference',
-      Icon(
-        FontAwesomeIcons.comments,
-        color: Colors.blueAccent.shade100,
-      ),
-    ),
-    EventCategory(
-      6,
-      'gala',
-      Icon(
-        FontAwesomeIcons.cameraRetro,
-        color: Colors.blueAccent.shade100,
-      ),
-    ),
-    EventCategory(
-      7,
-      'charity',
-      Icon(
-        FontAwesomeIcons.handHoldingHeart,
-        color: Colors.blueAccent.shade100,
-      ),
-    ),
-    EventCategory(
-      8,
-      'sport',
-      Icon(
-        FontAwesomeIcons.volleyballBall,
-        color: Colors.blueAccent.shade100,
-      ),
-    ),
-    EventCategory(
-      9,
-      'expo',
-      Icon(
-        FontAwesomeIcons.store,
-        color: Colors.blueAccent.shade100,
-      ),
-    ),
-    EventCategory(
-      10,
-      'community',
-      Icon(
-        FontAwesomeIcons.users,
-        color: Colors.blueAccent.shade100,
-      ),
-    ),
-    EventCategory(
-      11,
-      'politics',
-      Icon(
-        FontAwesomeIcons.landmark,
-        color: Colors.blueAccent.shade100,
-      ),
-    ),
-    EventCategory(
-      12,
-      'board games',
-      Icon(
-        FontAwesomeIcons.dice,
-        color: Colors.blueAccent.shade100,
-      ),
-    ),
-    EventCategory(
-      13,
-      'karaoke',
-      Icon(
-        FontAwesomeIcons.microphoneAlt,
-        color: Colors.blueAccent.shade100,
-      ),
-    ),
-    EventCategory(
-      14,
-      'other',
-      Icon(
-        FontAwesomeIcons.atom,
-        color: Colors.blueAccent.shade100,
-      ),
-    ),
+    EventCategory(1, 'tournament', FontAwesomeIcons.trophy),
+    EventCategory(2, 'party', FontAwesomeIcons.glassCheers),
+    EventCategory(3, 'concert', FontAwesomeIcons.guitar),
+    EventCategory(4, 'festival', FontAwesomeIcons.icons),
+    EventCategory(5, 'conference', FontAwesomeIcons.comments),
+    EventCategory(6, 'gala', FontAwesomeIcons.cameraRetro),
+    EventCategory(7, 'charity', FontAwesomeIcons.handHoldingHeart),
+    EventCategory(8, 'sport', FontAwesomeIcons.volleyballBall),
+    EventCategory(9, 'expo', FontAwesomeIcons.store),
+    EventCategory(10, 'community', FontAwesomeIcons.users),
+    EventCategory(11, 'politics', FontAwesomeIcons.landmark),
+    EventCategory(12, 'board games', FontAwesomeIcons.dice),
+    EventCategory(13, 'karaoke', FontAwesomeIcons.microphoneAlt),
+    EventCategory(14, 'other', FontAwesomeIcons.atom)
   ];
 
   List<EventCategory> getEventCategories() {
@@ -149,6 +51,18 @@ class EventCategories {
       return cat.id;
     } else {
       return 14;
+    }
+  }
+
+  IconData getIconByID(int id) {
+    EventCategory cat =
+        categories.firstWhere((element) => element.id == id, orElse: () {
+      return null;
+    });
+    if (cat != null) {
+      return cat.iconData;
+    } else {
+      return FontAwesomeIcons.atom;
     }
   }
 }

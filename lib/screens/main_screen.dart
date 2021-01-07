@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/API/events.dart';
 import 'package:flutter_project/models/event.dart';
+import 'package:flutter_project/models/eventCategory.dart';
 import 'package:flutter_project/models/place.dart';
 import 'package:flutter_project/screens/add_event_screen.dart';
 import 'package:flutter_project/screens/settings_screen.dart';
@@ -35,6 +36,7 @@ Set<String> preferences = {
   "restaurant",
   //"cafe",
 };
+EventCategories eventCategories = new EventCategories();
 
 class _MainScreenState extends State<MainScreen> {
   @override
@@ -212,13 +214,19 @@ class _MainScreenState extends State<MainScreen> {
                                   .substring(11, 16)),
                               tileColor: Colors.white,
                               leading: ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    minHeight: 100,
-                                    minWidth: 100,
-                                    maxHeight: 100,
-                                    maxWidth: 100,
-                                  ),
-                                  child: Icon(Icons.access_alarm)),
+                                constraints: BoxConstraints(
+                                  minHeight: 100,
+                                  minWidth: 100,
+                                  maxHeight: 100,
+                                  maxWidth: 100,
+                                ),
+                                child: Icon(
+                                  eventCategories
+                                      .getIconByID(events[index].categoryID),
+                                  color: Colors.blue.shade200,
+                                  size: 50,
+                                ),
+                              ),
                             ),
                           ))));
             }),
