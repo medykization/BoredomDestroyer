@@ -192,14 +192,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: FlatButton(
           onPressed: () async {
             if (_formKey.currentState.validate() && validateCheckBox()) {
-              // User user = await signUp();
-              // if (user.accessToken != null) {
-              //   print(user.name);
-              //   await _addUserDataToHive(user);
-              //   navigateTo(MainScreen(), 200);
-              // } else {
-              //   print("\nCan't create account");
-              // }
+              User user = await signUp();
+              if (user.accessToken != null) {
+                print(user.name);
+                await _addUserDataToHive(user);
+                navigateTo(MainScreen(), 200);
+              } else {
+                print("\nCan't create account");
+              }
               print('validation test');
             }
           },
