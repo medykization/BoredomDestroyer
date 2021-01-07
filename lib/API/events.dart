@@ -72,6 +72,7 @@ class EventsApi {
       print("Event Added. " +
           "Status Code:" +
           response.statusCode.toString()); // for debugging
+      print(body);
     } catch (e) {
       print(e.toString());
     }

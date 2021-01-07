@@ -12,8 +12,8 @@ class AddEventScreen extends StatefulWidget {
   _AddEventScreenState createState() => _AddEventScreenState();
 }
 
-String eventName, location, description;
-DateTime startTime, endTime;
+String inputEventName, inputEventLocation, inputEventDescription;
+DateTime inputBeginTime, inputEndTime;
 String category;
 
 var _currentSelectedCategory;
@@ -71,8 +71,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   String _apiKey = "AIzaSyDuNDK_ogM5AnrMqawuqZQYzDVXkVnE45I";
   String formattedDate = DateFormat('yyyy-MM-dd kk:mm').format(DateTime.now());
-  String inputDateTimeBegin;
-  String inputDateTimeEnd;
+  String displayBeginTime;
+  String displayEndTime;
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +120,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: TextFormField(
           onChanged: (value) {
-            eventName = value;
+            inputEventName = value;
           },
           decoration: InputDecoration(
               border:
@@ -140,7 +140,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         maxLength: 254,
         maxLines: null,
         onChanged: (value) {
-          location = value;
+          inputEventDescription = value;
         },
         validator: (input) =>
             input.length < 30 ? 'must contain at least 30 characters' : null,
@@ -179,10 +179,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
           DatePicker.showDateTimePicker(context, showTitleActions: true,
               onConfirm: (date) {
             setState(() {
-              startTime = date;
-              inputDateTimeBegin = formatDate(date);
+              inputBeginTime = date;
+              displayBeginTime = formatDate(date);
             });
-            beginDTtextController.text = inputDateTimeBegin;
+            beginDTtextController.text = displayBeginTime;
           }, currentTime: DateTime.now(), locale: LocaleType.pl);
           FocusScope.of(context).requestFocus(new FocusNode());
         },
@@ -194,7 +194,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 color: Colors.blueAccent.shade100, size: 20),
             labelText: 'beginning of the event'),
         validator: (input) =>
-            inputDateTimeBegin == null ? 'can\'t be empty' : null,
+            displayBeginTime == null ? 'can\'t be empty' : null,
       ),
     );
   }
@@ -211,11 +211,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
               DatePicker.showDateTimePicker(context, showTitleActions: true,
                   onConfirm: (date) {
                 setState(() {
-                  endTime = date;
-                  inputDateTimeEnd = formatDate(date);
+                  inputEndTime = date;
+                  displayEndTime = formatDate(date);
                 });
-                print('End time ' + endTime.toString());
-                endDTtextController.text = inputDateTimeEnd;
+                endDTtextController.text = displayEndTime;
               }, currentTime: DateTime.now(), locale: LocaleType.pl);
               FocusScope.of(context).requestFocus(new FocusNode());
             },
@@ -230,10 +229,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 labelText: 'end of the event'),
             validator: (input) {
               String errorText;
-              if (inputDateTimeEnd == null) {
+              if (displayEndTime == null) {
                 errorText = 'can\'t be empty';
-              } else if (DateTime.parse(inputDateTimeEnd)
-                  .isBefore(DateTime.parse(inputDateTimeBegin))) {
+              } else if (DateTime.parse(displayEndTime)
+                  .isBefore(DateTime.parse(displayBeginTime))) {
                 return 'the end must be after the beginning';
               }
               return errorText;
@@ -256,9 +255,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
           if (_formKey.currentState.validate()) {
             //print(startTime.toString());
             Event event = new Event(
-              name: eventName,
+              name: inputEventName,
               categoryID: 1, // FOR TESTING
-              description: description,
+              categoryName: category,
+              description: inputEventDescription,
               locationCity: "Łódź", // FOR TESTING
               locationAddress: "Piotrkowska 20", // FOR TESTING
               dateTimeBegin: "2020-01-27T20:00:00.000Z",
