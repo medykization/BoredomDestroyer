@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_project/models/event.dart';
+import 'package:flutter_project/screens/main_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:search_map_place/search_map_place.dart';
@@ -15,6 +17,8 @@ DateTime startTime, endTime;
 String category;
 
 var _currentSelectedCategory;
+
+// TO DO Map with IDs
 List<String> _categories = [
   "tournament",
   "party",
@@ -160,7 +164,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         language: 'pl',
         apiKey: _apiKey,
         onSelected: (Place place) {
-          print(place.fullJSON);
+          //print(place.fullJSON);
         },
       ),
     );
@@ -175,6 +179,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
           DatePicker.showDateTimePicker(context, showTitleActions: true,
               onConfirm: (date) {
             setState(() {
+              startTime = date;
               inputDateTimeBegin = formatDate(date);
             });
             beginDTtextController.text = inputDateTimeBegin;
@@ -206,8 +211,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
               DatePicker.showDateTimePicker(context, showTitleActions: true,
                   onConfirm: (date) {
                 setState(() {
+                  endTime = date;
                   inputDateTimeEnd = formatDate(date);
                 });
+                print('End time ' + endTime.toString());
                 endDTtextController.text = inputDateTimeEnd;
               }, currentTime: DateTime.now(), locale: LocaleType.pl);
               FocusScope.of(context).requestFocus(new FocusNode());
@@ -247,7 +254,17 @@ class _AddEventScreenState extends State<AddEventScreen> {
         textColor: Colors.white,
         onPressed: () {
           if (_formKey.currentState.validate()) {
-            print('validation test');
+            //print(startTime.toString());
+            Event event = new Event(
+              name: eventName,
+              categoryID: 1, // FOR TESTING
+              description: description,
+              locationCity: "Łódź", // FOR TESTING
+              locationAddress: "Piotrkowska 20", // FOR TESTING
+              dateTimeBegin: "2020-01-27T20:00:00.000Z",
+              dateTimeEnd: "2020-01-27T22:00:00.000Z",
+            );
+            eventsApi.addEvent(event);
           }
         },
         child: Text('SUBMIT'),
