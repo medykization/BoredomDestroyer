@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/models/event.dart';
+import 'package:flutter_project/models/eventCategory.dart';
 import 'package:flutter_project/screens/main_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -20,16 +21,12 @@ String inputEventName,
     inputEndTime,
     inputEventCategory;
 
+int inputCategoryID;
+
 var _currentSelectedCategory;
 
-// TO DO Map with IDs
-List<String> _categories = [
-  "tournament",
-  "party",
-  "concert",
-  "festival",
-  "other",
-];
+EventCategories categories;
+List<EventCategory> _categories;
 
 List<DropdownMenuItem<String>> _dropDownMenuItems;
 
@@ -44,8 +41,13 @@ class _AddEventScreenState extends State<AddEventScreen> {
   @override
   void initState() {
     super.initState();
+    categories = new EventCategories();
+    _categories = categories.getEventCategories();
+
+    // Dropdown Menu
     _dropDownMenuItems = getDropDownMenuItems();
     inputEventCategory = _dropDownMenuItems[0].value;
+
     dateTimeFocusNode = FocusNode();
   }
 
@@ -59,10 +61,11 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
     List<DropdownMenuItem<String>> items = [];
-    for (String city in _categories) {
+    for (EventCategory category in _categories) {
       // here we are creating the drop down menu items, you can customize the item right here
       // but I'll just use a simple text for this
-      items.add(new DropdownMenuItem(value: city, child: new Text(city)));
+      items.add(new DropdownMenuItem(
+          value: category.name, child: new Text(category.name)));
     }
     return items;
   }
@@ -275,7 +278,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
               inputEventLocationCity.isNotEmpty) {
             Event event = new Event(
               name: inputEventName,
-              categoryID: 1, // FOR TESTING
+              categoryID: inputCategoryID, // FOR TESTING
               categoryName: inputEventCategory,
               description: inputEventDescription,
               locationCity: inputEventLocationCity,
@@ -316,13 +319,15 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 onChanged: (String newValue) {
                   setState(() {
                     _currentSelectedCategory = newValue;
+                    inputCategoryID =
+                        categories.getIDbyName(_currentSelectedCategory);
                     state.didChange(newValue);
                   });
                 },
-                items: _categories.map((String value) {
+                items: _categories.map((EventCategory value) {
                   return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
+                    value: value.name,
+                    child: Text(value.name),
                   );
                 }).toList(),
               ),
