@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/models/event.dart';
-import 'package:flutter_project/models/eventCategory.dart';
+import 'package:flutter_project/models/event_category.dart';
 import 'package:flutter_project/screens/main_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
