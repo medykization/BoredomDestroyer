@@ -48,7 +48,8 @@ class EventsApi {
       'location_city': event.locationCity,
       'location_address': event.locationAddress,
       'begin_time': event.dateTimeBegin,
-      'end_time': event.dateTimeEnd
+      'end_time': event.dateTimeEnd,
+      'rating': event.userRating
     };
 
     String body = convert.json.encode(eventMap);
