@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/API/events.dart';
 import 'package:flutter_project/models/event.dart';
-import 'package:flutter_project/models/eventCategory.dart';
+import 'package:flutter_project/models/event_category.dart';
 import 'package:flutter_project/models/place.dart';
 import 'package:flutter_project/screens/add_event_screen.dart';
 import 'package:flutter_project/screens/settings_screen.dart';
