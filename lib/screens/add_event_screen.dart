@@ -15,9 +15,10 @@ class AddEventScreen extends StatefulWidget {
 String inputEventName,
     inputEventLocationCity,
     inputEventLocationAddress,
-    inputEventDescription;
-DateTime inputBeginTime, inputEndTime;
-String inputEventCategory;
+    inputEventDescription,
+    inputBeginTime,
+    inputEndTime,
+    inputEventCategory;
 
 var _currentSelectedCategory;
 
@@ -73,7 +74,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
   }
 
   String _apiKey = "AIzaSyDuNDK_ogM5AnrMqawuqZQYzDVXkVnE45I";
-  String formattedDate = DateFormat('yyyy-MM-dd kk:mm').format(DateTime.now());
   String displayBeginTime;
   String displayEndTime;
 
@@ -196,8 +196,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
           DatePicker.showDateTimePicker(context, showTitleActions: true,
               onConfirm: (date) {
             setState(() {
-              inputBeginTime = date;
-              displayBeginTime = formatDate(date);
+              inputBeginTime = formatDateToSend(date);
+              displayBeginTime = formatDateToDisplay(date);
             });
             beginDTtextController.text = displayBeginTime;
           }, currentTime: DateTime.now(), locale: LocaleType.pl);
@@ -228,8 +228,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
               DatePicker.showDateTimePicker(context, showTitleActions: true,
                   onConfirm: (date) {
                 setState(() {
-                  inputEndTime = date;
-                  displayEndTime = formatDate(date);
+                  inputEndTime = formatDateToSend(date);
+                  print(inputEndTime);
+                  displayEndTime = formatDateToDisplay(date);
                 });
                 endDTtextController.text = displayEndTime;
               }, currentTime: DateTime.now(), locale: LocaleType.pl);
@@ -269,7 +270,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
         color: Colors.blueAccent,
         textColor: Colors.white,
         onPressed: () {
-          if (_formKey.currentState.validate()) {
+          if (_formKey.currentState.validate() &&
+              inputEventLocationAddress.isNotEmpty &&
+              inputEventLocationCity.isNotEmpty) {
             Event event = new Event(
               name: inputEventName,
               categoryID: 1, // FOR TESTING
@@ -277,8 +280,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
               description: inputEventDescription,
               locationCity: inputEventLocationCity,
               locationAddress: inputEventLocationAddress,
-              dateTimeBegin: "2020-01-27T20:00:00.000Z",
-              dateTimeEnd: "2020-01-27T22:00:00.000Z",
+              dateTimeBegin: inputBeginTime,
+              dateTimeEnd: inputEndTime,
               userRating: 0,
             );
             eventsApi.addEvent(event);
@@ -330,7 +333,13 @@ class _AddEventScreenState extends State<AddEventScreen> {
     );
   }
 
-  String formatDate(DateTime dateTime) {
+  String formatDateToDisplay(DateTime dateTime) {
     return DateFormat('yyyy-MM-dd kk:mm').format(dateTime);
+  }
+
+  String formatDateToSend(DateTime dateTime) {
+    List<String> splittedTime = dateTime.toString().split(" ");
+    String result = splittedTime[0] + 'T' + splittedTime[1] + 'Z';
+    return result;
   }
 }
