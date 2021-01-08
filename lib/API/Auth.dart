@@ -75,9 +75,10 @@ class HttpAuth {
           },
           body: body);
 
+      print(response.statusCode);
+
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
       String result = jsonResponse['accessToken'];
-
       return result;
     } on FormatException {
       return null;
