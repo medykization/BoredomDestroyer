@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/API/places.dart';
+import 'package:flutter_project/models/place_category.dart';
 
 class PreferencesScreen extends StatefulWidget {
   @override
@@ -8,7 +9,7 @@ class PreferencesScreen extends StatefulWidget {
 }
 
 PlacesApi placesApi = new PlacesApi();
-List<String> _categories;
+PlaceCategories placeCategories;
 List<String> _filters;
 
 class _PreferencesScreenState extends State<PreferencesScreen> {
@@ -16,8 +17,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
   void initState() {
     super.initState();
     _filters = <String>[];
-    _loadCategories();
-    print(_categories);
+    placeCategories = new PlaceCategories();
   }
 
   @override
@@ -33,47 +33,35 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
         backgroundColor: Colors.blueAccent,
         title: Text('Preferences'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                flex: 2,
-                child: Container(),
-              ),
-              Wrap(children: categoryWidgets.toList()),
-              Expanded(
-                flex: 1,
-                child: Container(),
-              ),
-              _buildSearchButton()
-            ],
-          ),
+        child: Column(
+          children: [
+            Wrap(children: categoryWidgets.toList()),
+            _buildSearchButton()
+          ],
         ),
       ),
     );
   }
 
   Iterable<Widget> get categoryWidgets sync* {
-    for (String category in _categories) {
+    for (PlaceCategory category in placeCategories.placeCategories) {
       yield Padding(
         padding: const EdgeInsets.all(6.0),
         child: FilterChip(
           avatar: CircleAvatar(
-            child: Text(category[0].toUpperCase()),
+            child: Text(category.toString()[0].toUpperCase()),
           ),
-          label: Text(category),
-          selected: _filters.contains(category),
+          label: Text(toLabel(category.toString())),
+          selected: _filters.contains(category.toString()),
           onSelected: (bool selected) {
             setState(() {
               if (selected) {
-                _filters.add(category);
+                _filters.add(category.toString());
               } else {
                 _filters.removeWhere((String name) {
-                  return name == category;
+                  return name == category.toString();
                 });
               }
             });
@@ -105,7 +93,15 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
     );
   }
 
-  _loadCategories() {
-    _categories = placesApi.getCategories();
+  String toLabel(String s) {
+    if (s == null) {
+      return null;
+    }
+    String result = s.replaceAll('_', ' ');
+    return result.splitMapJoin(RegExp(r'\w+'),
+        onMatch: (m) =>
+            '${m.group(0)}'.substring(0, 1).toUpperCase() +
+            '${m.group(0)}'.substring(1).toLowerCase(),
+        onNonMatch: (n) => ' ');
   }
 }
