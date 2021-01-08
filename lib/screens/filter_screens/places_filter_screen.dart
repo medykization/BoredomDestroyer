@@ -31,16 +31,19 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
           },
         ),
         backgroundColor: Colors.blueAccent,
-        title: Text('Preferences'),
+        title: Text('Search Places'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            Wrap(children: categoryWidgets.toList()),
-            _buildSearchButton()
-          ],
-        ),
+        child: Wrap(children: categoryWidgets.toList()),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          print("Selected: ${_filters.join(', ')}");
+          Navigator.pop(context);
+        },
+        child: Icon(Icons.search),
+        backgroundColor: Colors.blueAccent,
       ),
     );
   }
@@ -69,28 +72,6 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
         ),
       );
     }
-  }
-
-  Widget _buildSearchButton() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 50, horizontal: 130),
-      child: ButtonTheme(
-        shape: new RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(10)),
-        minWidth: 500.0,
-        height: 50.0,
-        child: FlatButton(
-          onPressed: () async {
-            print("Selected: ${_filters.join(', ')}");
-          },
-          child: Text(
-            'Search',
-            style: TextStyle(color: Colors.white, fontSize: 18),
-          ),
-          color: Colors.blueAccent,
-        ),
-      ),
-    );
   }
 
   String toLabel(String s) {
