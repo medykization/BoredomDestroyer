@@ -179,7 +179,7 @@ class _MainScreenState extends State<MainScreen> {
           }));
         },
         child: Icon(Icons.search),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.blueAccent,
       ),
     );
   }
@@ -239,7 +239,7 @@ class _MainScreenState extends State<MainScreen> {
           }));
         },
         child: Icon(Icons.add),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.blueAccent,
       ),
     );
   }
