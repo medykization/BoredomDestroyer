@@ -72,15 +72,4 @@ class PlacesApi {
     }
     return "N/D";
   }
-
-  List<String> getCategories() {
-    // DATA FOR TESTING
-    List<String> categories = [];
-    categories.add("cinema");
-    categories.add("cafe");
-    categories.add("club");
-    categories.add("bar");
-    categories.add("bowling");
-    return categories;
-  }
 }

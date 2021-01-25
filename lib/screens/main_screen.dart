@@ -193,7 +193,7 @@ class _MainScreenState extends State<MainScreen> {
           }));
         },
         child: Icon(Icons.search),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.blueAccent,
       ),
     );
   }
