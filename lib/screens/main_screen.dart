@@ -6,8 +6,10 @@ import 'package:flutter_project/models/event.dart';
 import 'package:flutter_project/models/event_category.dart';
 import 'package:flutter_project/models/place.dart';
 import 'package:flutter_project/screens/add_event_screen.dart';
+import 'package:flutter_project/screens/filter_screens/event_filter_screen.dart';
 import 'package:flutter_project/screens/settings_screen.dart';
 import 'package:flutter_project/screens/filter_screens/places_filter_screen.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -55,8 +57,10 @@ class _MainScreenState extends State<MainScreen> {
 
   setTimer() {
     _timer = new Timer.periodic(Duration(minutes: 1), (timer) {
-      _loadPlaces();
-      _loadEvents();
+      if (this.mounted) {
+        _loadPlaces();
+        _loadEvents();
+      }
     });
   }
 
@@ -67,24 +71,34 @@ class _MainScreenState extends State<MainScreen> {
       await placesApi
           .getNearbyPlaces(2000,
               new Location(position.latitude, position.longitude), preferences)
-          .then((val) => setState(() {
-                if (val != null) {
-                  places = val;
-                  isLoadedPlaces = true;
-                }
-              }));
+          .then((val) => {
+                if (this.mounted)
+                  {
+                    setState(() {
+                      if (val != null) {
+                        places = val;
+                        isLoadedPlaces = true;
+                      }
+                    })
+                  }
+              });
     }
   }
 
   Future<void> _loadEvents() async {
     String city = "Łódź"; // TEST
     if (city != null) {
-      await eventsApi.getEventsNearby(city).then((val) => setState(() {
-            if (val != null) {
-              events = val;
-              isLoadedEvents = true;
-            }
-          }));
+      await eventsApi.getEventsNearby(city).then((val) => {
+            if (this.mounted)
+              {
+                setState(() {
+                  if (val != null) {
+                    events = val;
+                    isLoadedEvents = true;
+                  }
+                })
+              }
+          });
     }
   }
 
@@ -231,15 +245,30 @@ class _MainScreenState extends State<MainScreen> {
                           ))));
             }),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute<bool>(builder: (BuildContext context) {
-            return (AddEventScreen());
-          }));
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.blue,
+      floatingActionButton: SpeedDial(
+        backgroundColor: Colors.blueAccent,
+        foregroundColor: Colors.white,
+        elevation: 8.0,
+        shape: CircleBorder(),
+        animatedIcon: AnimatedIcons.menu_close,
+        children: [
+          SpeedDialChild(
+            child: Icon(Icons.add),
+            backgroundColor: Colors.green,
+            onTap: () => Navigator.push(context,
+                MaterialPageRoute<bool>(builder: (BuildContext context) {
+              return (AddEventScreen());
+            })),
+          ),
+          SpeedDialChild(
+            child: Icon(Icons.search),
+            backgroundColor: Colors.blue,
+            onTap: () => Navigator.push(context,
+                MaterialPageRoute<bool>(builder: (BuildContext context) {
+              return (EventPreferencesScreen());
+            })),
+          ),
+        ],
       ),
     );
   }

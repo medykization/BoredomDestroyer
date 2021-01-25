@@ -55,7 +55,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
   void dispose() {
     // Clean up the focus node when the Form is disposed.
     dateTimeFocusNode.dispose();
-
+    beginDTtextController.dispose();
+    endDTtextController.dispose();
     super.dispose();
   }
 
@@ -71,9 +72,11 @@ class _AddEventScreenState extends State<AddEventScreen> {
   }
 
   void changedDropDownItem(String selectedCategory) {
-    setState(() {
-      inputEventCategory = selectedCategory;
-    });
+    if (this.mounted) {
+      setState(() {
+        inputEventCategory = selectedCategory;
+      });
+    }
   }
 
   String _apiKey = "AIzaSyDuNDK_ogM5AnrMqawuqZQYzDVXkVnE45I";
@@ -198,10 +201,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
         onTap: () {
           DatePicker.showDateTimePicker(context, showTitleActions: true,
               onConfirm: (date) {
-            setState(() {
-              inputBeginTime = formatDateToSend(date);
-              displayBeginTime = formatDateToDisplay(date);
-            });
+            if (this.mounted) {
+              setState(() {
+                inputBeginTime = formatDateToSend(date);
+                displayBeginTime = formatDateToDisplay(date);
+              });
+            }
             beginDTtextController.text = displayBeginTime;
           }, currentTime: DateTime.now(), locale: LocaleType.pl);
           FocusScope.of(context).requestFocus(new FocusNode());
@@ -230,11 +235,13 @@ class _AddEventScreenState extends State<AddEventScreen> {
             onTap: () {
               DatePicker.showDateTimePicker(context, showTitleActions: true,
                   onConfirm: (date) {
-                setState(() {
-                  inputEndTime = formatDateToSend(date);
-                  print(inputEndTime);
-                  displayEndTime = formatDateToDisplay(date);
-                });
+                if (this.mounted) {
+                  setState(() {
+                    inputEndTime = formatDateToSend(date);
+                    print(inputEndTime);
+                    displayEndTime = formatDateToDisplay(date);
+                  });
+                }
                 endDTtextController.text = displayEndTime;
               }, currentTime: DateTime.now(), locale: LocaleType.pl);
               FocusScope.of(context).requestFocus(new FocusNode());
@@ -288,7 +295,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
               userRating: 0,
             );
             eventsApi.addEvent(event).then((value) => {
-                  if (value) {Navigator.pop(context)}
+                  if (!value) {Navigator.pop(context)}
                 });
           }
         },
@@ -319,12 +326,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 value: _currentSelectedCategory,
                 isDense: true,
                 onChanged: (String newValue) {
-                  setState(() {
-                    _currentSelectedCategory = newValue;
-                    inputCategoryID =
-                        categories.getIDbyName(_currentSelectedCategory);
-                    state.didChange(newValue);
-                  });
+                  if (this.mounted) {
+                    setState(() {
+                      _currentSelectedCategory = newValue;
+                      inputCategoryID =
+                          categories.getIDbyName(_currentSelectedCategory);
+                      state.didChange(newValue);
+                    });
+                  }
                 },
                 items: _categories.map((EventCategory value) {
                   return DropdownMenuItem<String>(

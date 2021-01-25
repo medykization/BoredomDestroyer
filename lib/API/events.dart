@@ -54,7 +54,7 @@ class EventsApi {
     }
   }
 
-  Future<void> addEvent(Event event) async {
+  Future<bool> addEvent(Event event) async {
     // Get body
     Map eventMap = {
       'event_name': event.name,
