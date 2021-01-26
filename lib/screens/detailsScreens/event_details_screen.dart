@@ -211,9 +211,24 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             color: Colors.grey,
             height: 30,
           ),
-          Text(
-            event.userRating.toString(),
-            style: TextStyle(fontSize: 18),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: (() {
+                    //Add +1 to event rating
+                  })),
+              Text(
+                event.userRating.toString(),
+                style: TextStyle(fontSize: 40),
+              ),
+              IconButton(
+                  icon: Icon(Icons.remove),
+                  onPressed: (() {
+                    //Add +1 to event rating
+                  })),
+            ],
           ),
         ],
       ),
