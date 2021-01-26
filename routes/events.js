@@ -8,8 +8,7 @@ const jwt = require('jsonwebtoken');
 let router = express.Router();
 //change to get
 router.post('/categories', auth.authenticateToken, (req, res) => {
-    var check = db.getCategories();
-    check.then(function(result){
+    db.getCategories().then(function(result){
         if(result != null) {
             res.json(result)
         }
@@ -21,8 +20,7 @@ router.post('/categories', auth.authenticateToken, (req, res) => {
 //change to get
 router.post('/local', auth.authenticateToken, (req, res) => {
     const body = req.body
-    var check = db.getLocalEvents(body.city);
-    check.then(function(result){
+    db.getLocalEvents(body.city).then(function(result){
         if(result != null) {
             res.json(result)
         }
@@ -62,6 +60,34 @@ router.post('/add', auth.authenticateToken, (req, res) => {
             res.sendStatus(400)
         }
     })
+});
+
+router.post('/vote', auth.authenticateToken, (req, res) => {
+    const body = req.body
+    const value = body.vote
+    const event_id = body.event_id
+    console.log(body.username)
+    console.log(value)
+    console.log(event_id)
+    db.getUserIdFromName(body.username).then(function(result){
+        if(result != null) {
+            var user_id = result.results[0].id;
+            var check = db.insertVote(event_id, user_id, value);
+            check.then(function(result){
+                if(result != null) {
+                    res.sendStatus(200)
+                }
+                else {
+                    res.sendStatus(400)
+                }
+            })
+
+        }
+        else {
+            res.sendStatus(400)
+        }
+    })
+
 });
 
 module.exports = router

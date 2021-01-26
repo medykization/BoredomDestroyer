@@ -13,3 +13,7 @@ class Event {
 }
 
 module.exports = Event   
+
+//select e.id , e.user_id, e.event_name, e.category_id, e.description, e.location_city, e.location_address, e.begin_time, e.end_time, e.rating, ec.category_name, sum(ev.vote) from event e join event_category ec on e.category_id = ec.id join event_votes ev on e.id = ev.event_id WHERE e.location_city = 'Łódź' GROUP BY e.id, ec.category_name
+//select e.id , e.user_id, e.event_name, e.category_id, e.description, e.location_city, e.location_address, e.begin_time, e.end_time, e.rating, ec.category_name,COALESCE(sum(ev.vote),0) from event e join event_category ec on e.category_id = ec.id join event_votes ev on e.id = ev.event_id WHERE e.location_city = 'Łódź' GROUP BY e.id, ec.category_name
+//select e.id , e.user_id, e.event_name, e.category_id, e.description, e.location_city, e.location_address, e.begin_time, e.end_time, ec.category_name, (select COALESCE(sum(vote),0) from event_votes where event_id = e.id) as rating from event e join event_category ec on e.category_id = ec.id WHERE e.location_city = 'Łódź' GROUP BY e.id, ec.category_name

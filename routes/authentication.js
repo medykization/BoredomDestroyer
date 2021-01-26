@@ -68,12 +68,4 @@ router.post('/username', exist.checkIfNameExist, (req, res) => {
     return res.sendStatus(200);
 });
 
-function generateAccessToken(username) {
-    const accessToken = jwt.sign(user, process.env.ACCES_TOKEN_SECRET);
-};
-
-function generateRefreshToken(username) {
-    const accessToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
-};
-
 module.exports = router
