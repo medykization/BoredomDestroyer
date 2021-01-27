@@ -253,19 +253,19 @@ class _MainScreenState extends State<MainScreen> {
         animatedIcon: AnimatedIcons.menu_close,
         children: [
           SpeedDialChild(
-            child: Icon(Icons.add),
-            backgroundColor: Colors.green,
-            onTap: () => Navigator.push(context,
-                MaterialPageRoute<bool>(builder: (BuildContext context) {
-              return (AddEventScreen());
-            })),
-          ),
-          SpeedDialChild(
             child: Icon(Icons.search),
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.blueAccent,
             onTap: () => Navigator.push(context,
                 MaterialPageRoute<bool>(builder: (BuildContext context) {
               return (EventPreferencesScreen());
+            })),
+          ),
+          SpeedDialChild(
+            child: Icon(Icons.add),
+            backgroundColor: Colors.green[400],
+            onTap: () => Navigator.push(context,
+                MaterialPageRoute<bool>(builder: (BuildContext context) {
+              return (AddEventScreen());
             })),
           ),
         ],

@@ -12,6 +12,16 @@ class EventDetailsScreen extends StatefulWidget {
 
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
   final Event event;
+
+  bool votedUp = false;
+  bool votedDown = false;
+
+  var _thumbDownColor = Colors.grey;
+  var _thumbUpColor = Colors.grey;
+
+  var _greenThumbColor = Colors.green;
+  var _redThumbColor = Colors.red;
+
   _EventDetailsScreenState({@required this.event});
 
   @override
@@ -215,18 +225,54 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
-                  icon: Icon(Icons.add),
+                  iconSize: 20,
+                  color: _thumbUpColor,
+                  icon: Icon(Icons.thumb_up),
                   onPressed: (() {
                     //Add +1 to event rating
+                    if (!votedUp) {
+                      setState(() {
+                        votedUp = true;
+                        _thumbUpColor = _greenThumbColor;
+                        // Check Vote Down
+                        if (votedDown) {
+                          votedDown = false;
+                          _thumbDownColor = Colors.grey;
+                        }
+                      });
+                    } else {
+                      setState(() {
+                        votedUp = false;
+                        _thumbUpColor = Colors.grey;
+                      });
+                    }
                   })),
               Text(
                 event.userRating.toString(),
-                style: TextStyle(fontSize: 40),
+                style: TextStyle(fontSize: 30, color: Colors.grey[800]),
               ),
               IconButton(
-                  icon: Icon(Icons.remove),
+                  iconSize: 20,
+                  icon: Icon(Icons.thumb_down),
+                  color: _thumbDownColor,
                   onPressed: (() {
                     //Add +1 to event rating
+                    if (!votedDown) {
+                      setState(() {
+                        votedDown = true;
+                        _thumbDownColor = _redThumbColor;
+                        // Check Vote Up
+                        if (votedUp) {
+                          votedUp = false;
+                          _thumbUpColor = Colors.grey;
+                        }
+                      });
+                    } else {
+                      setState(() {
+                        votedDown = false;
+                        _thumbDownColor = Colors.grey;
+                      });
+                    }
                   })),
             ],
           ),

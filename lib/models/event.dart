@@ -30,7 +30,7 @@ class Event {
       dateTimeBegin: json['begin_time'],
       dateTimeEnd: json['end_time'],
       description: json['description'],
-      userRating: json['rating'],
+      userRating: int.parse(json['rating']),
     );
   }
 
