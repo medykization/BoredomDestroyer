@@ -44,11 +44,14 @@ async function getEventCategoryId(category_name) {
     }
 };
 
-async function getLocalEvents(city) {
+async function getLocalEvents(city, user_id) {
     const client = await pool.connect();
     try {
-        const selectQuery = 'select e.id , e.user_id, e.event_name, e.category_id, e.description, e.location_city, e.location_address, e.begin_time, e.end_time, ec.category_name, (select COALESCE(sum(vote),0) from event_votes where event_id = e.id) as rating from event e join event_category ec on e.category_id = ec.id WHERE e.location_city = $1 GROUP BY e.id, ec.category_name';
-        const result = await client.query(selectQuery, [city]);
+        const selectQuery = 'select e.id , e.user_id, e.event_name, e.category_id, e.description, e.location_city, e.location_address, e.begin_time, e.end_time, ec.category_name,\
+        (select COALESCE(sum(vote),0) from event_votes where event_id = e.id) as rating,\
+        COALESCE((select vote from event_votes where user_id = $1 and event_id = e.id),0) as vote\
+        from event e join event_category ec on e.category_id = ec.id WHERE e.location_city = $2 GROUP BY e.id, ec.category_name';
+        const result = await client.query(selectQuery, [user_id, city]);
         const results = { 'results': (result) ? result.rows : null};
         if(result.rows[0] != null){
             client.release();

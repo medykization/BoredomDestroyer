@@ -20,9 +20,17 @@ router.post('/categories', auth.authenticateToken, (req, res) => {
 //change to get
 router.post('/local', auth.authenticateToken, (req, res) => {
     const body = req.body
-    db.getLocalEvents(body.city).then(function(result){
+    db.getUserIdFromName(body.username).then(function(result){
         if(result != null) {
-            res.json(result)
+            var user_id = result.results[0].id;
+            db.getLocalEvents(body.city, user_id).then(function(result){
+                if(result != null) {
+                    res.json(result)
+                }
+                else {
+                    res.sendStatus(400)
+                }
+            })
         }
         else {
             res.sendStatus(400)
@@ -87,7 +95,6 @@ router.post('/vote', auth.authenticateToken, (req, res) => {
             res.sendStatus(400)
         }
     })
-
 });
 
 module.exports = router
