@@ -11,6 +11,7 @@ class PreferencesScreen extends StatefulWidget {
 PlacesApi placesApi = new PlacesApi();
 PlaceCategories placeCategories;
 List<String> _filters;
+double _sliderRange = 1000;
 
 class _PreferencesScreenState extends State<PreferencesScreen> {
   @override
@@ -35,7 +36,35 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
-        child: Wrap(children: categoryWidgets.toList()),
+        child: Column(
+          children: [
+            _buildCategoryBar('Search range', Icons.place),
+            Divider(height: 15, thickness: 2),
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Text(
+                _sliderRange.round().toString() + " m",
+                style: TextStyle(fontSize: 18, color: Colors.grey[800]),
+              ),
+            ),
+            Slider(
+                activeColor: Colors.blue[200],
+                inactiveColor: Colors.blue[50],
+                divisions: 4,
+                min: 500,
+                value: _sliderRange,
+                max: 2500,
+                onChanged: (double value) {
+                  setState(() {
+                    _sliderRange = value;
+                  });
+                }),
+            SizedBox(height: 10),
+            _buildCategoryBar('Place categories', Icons.category),
+            Divider(height: 15, thickness: 2),
+            Wrap(children: categoryWidgets.toList()),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -53,7 +82,10 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
       yield Padding(
         padding: const EdgeInsets.all(6.0),
         child: FilterChip(
+          selectedColor: Colors.blue[200],
+          backgroundColor: Colors.blue[50],
           avatar: CircleAvatar(
+            backgroundColor: Colors.blue[100],
             child: Text(category.toString()[0].toUpperCase()),
           ),
           label: Text(toLabel(category.toString())),
@@ -85,4 +117,20 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
             '${m.group(0)}'.substring(1).toLowerCase(),
         onNonMatch: (n) => ' ');
   }
+}
+
+Widget _buildCategoryBar(String categoryName, IconData categoryIcon) {
+  return Row(
+    children: [
+      Icon(categoryIcon, color: Colors.blueAccent),
+      SizedBox(width: 8),
+      Text(
+        categoryName,
+        style: TextStyle(
+            color: Colors.blueAccent,
+            fontSize: 18,
+            fontWeight: FontWeight.bold),
+      ),
+    ],
+  );
 }
