@@ -12,15 +12,15 @@ class EventDetailsScreen extends StatefulWidget {
 
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
   final Event event;
-  int _userVote; // TO DO: GET USER VOTE
-  int _rating;
 
   var _thumbUpColor = Colors.grey;
   var _thumbDownColor = Colors.grey;
 
+  var _greenThumbColor = Colors.green;
+  var _redThumbColor = Colors.red;
+
   _EventDetailsScreenState({@required this.event}) {
-    _userVote = 0;
-    _rating = event.userRating;
+    initUserVotes();
   }
 
   @override
@@ -199,9 +199,6 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   }
 
   Widget _buildRatingColumn() {
-    var _greenThumbColor = Colors.green;
-    var _redThumbColor = Colors.red;
-
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Column(
@@ -232,27 +229,27 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   icon: Icon(Icons.thumb_up),
                   onPressed: (() {
                     setState(() {
-                      if (_userVote == 0) {
+                      if (event.vote == 0) {
                         // TO DO: ADD VOTE TO DB
-                        _userVote = 1;
+                        event.vote = 1;
                         _thumbUpColor = _greenThumbColor;
-                        _rating += 1;
-                      } else if (_userVote == -1) {
+                        event.userRating += 1;
+                      } else if (event.vote == -1) {
                         // TO DO: CHANGE VOTE IN DB
-                        _userVote = 1;
+                        event.vote = 1;
                         _thumbUpColor = _greenThumbColor;
                         _thumbDownColor = Colors.grey;
-                        _rating += 2;
-                      } else if (_userVote == 1) {
+                        event.userRating += 2;
+                      } else if (event.vote == 1) {
                         // TO DO: REMOVE VOTE FROM DB
-                        _userVote = 0;
+                        event.vote = 0;
                         _thumbUpColor = Colors.grey;
-                        _rating -= 1;
+                        event.userRating -= 1;
                       }
                     });
                   })),
               Text(
-                _rating.toString(),
+                event.userRating.toString(),
                 style: TextStyle(fontSize: 30, color: Colors.grey[800]),
               ),
               IconButton(
@@ -261,22 +258,22 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   color: _thumbDownColor,
                   onPressed: (() {
                     setState(() {
-                      if (_userVote == 0) {
+                      if (event.vote == 0) {
                         // TO DO: ADD VOTE TO DB
-                        _userVote = -1;
+                        event.vote = -1;
                         _thumbDownColor = _redThumbColor;
-                        _rating -= 1;
-                      } else if (_userVote == 1) {
+                        event.userRating -= 1;
+                      } else if (event.vote == 1) {
                         // TO DO: CHANGE VOTE IN DB
-                        _userVote = -1;
+                        event.vote = -1;
                         _thumbDownColor = _redThumbColor;
                         _thumbUpColor = Colors.grey;
-                        _rating -= 2;
-                      } else if (_userVote == -1) {
+                        event.userRating -= 2;
+                      } else if (event.vote == -1) {
                         // TO DO: REMOVE VOTE FROM DB
-                        _userVote = 0;
+                        event.vote = 0;
                         _thumbDownColor = Colors.grey;
-                        _rating += 1;
+                        event.userRating += 1;
                       }
                     });
                   })),
@@ -285,5 +282,18 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         ],
       ),
     );
+  }
+
+  void initUserVotes() {
+    if (event.vote == 1) {
+      _thumbDownColor = Colors.grey;
+      _thumbUpColor = _greenThumbColor;
+    } else if (event.vote == -1) {
+      _thumbUpColor = Colors.grey;
+      _thumbDownColor = _redThumbColor;
+    } else {
+      _thumbUpColor = Colors.grey;
+      _thumbDownColor = Colors.grey;
+    }
   }
 }
