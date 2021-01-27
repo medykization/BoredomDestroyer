@@ -1,4 +1,5 @@
 class Event {
+  int id;
   String name;
   String locationCity;
   String locationAddress;
@@ -11,7 +12,8 @@ class Event {
   int vote;
 
   Event(
-      {this.name,
+      {this.id,
+      this.name,
       this.locationCity,
       this.locationAddress,
       this.categoryID,
@@ -24,6 +26,7 @@ class Event {
 
   factory Event.fromJson(dynamic json) {
     return Event(
+        id: json['id'],
         name: json['event_name'],
         locationCity: json['location_city'],
         locationAddress: json['location_address'],

@@ -9,6 +9,10 @@ class EventsApi {
   static const getEventsURL =
       "https://boredom-server.herokuapp.com/events/local";
   static const addEventsURL = "https://boredom-server.herokuapp.com/events/add";
+  static const voteEventURL =
+      "https://boredom-server.herokuapp.com/events/vote";
+  static const deleteVoteURL =
+      "https://boredom-server.herokuapp.com/events/delete/vote";
 
   Future<List<Event>> getEventsNearby(String city) async {
     Box box = await Hive.openBox<User>('users');
@@ -80,10 +84,58 @@ class EventsApi {
             'Content-Type': 'application/json; charset=UTF-8',
           },
           body: body);
+      return response.statusCode == 200;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
 
-      print("Add Event: . " +
-          "Status Code:" +
-          response.statusCode.toString()); // for debugging
+  Future<bool> voteEvent(int eventID, int userVote) async {
+    // Get token and username
+    Box box = await Hive.openBox<User>('users');
+    User user = await box.get('user');
+    String token = user.accessToken;
+    String username = user.name;
+
+    // Get body
+    Map bodyMap = {"username": username, "event_id": eventID, "vote": userVote};
+    String body = convert.json.encode(bodyMap);
+
+    // Send data
+    try {
+      http.Response response = await http.post(voteEventURL,
+          headers: <String, String>{
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: body);
+      return response.statusCode == 200;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> deleteVote(int eventID) async {
+    // Get token and username
+    Box box = await Hive.openBox<User>('users');
+    User user = await box.get('user');
+    String token = user.accessToken;
+    String username = user.name;
+
+    // Get body
+    Map bodyMap = {"username": username, "event_id": eventID};
+    String body = convert.json.encode(bodyMap);
+
+    // Send data
+    try {
+      http.Response response = await http.post(deleteVoteURL,
+          headers: <String, String>{
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: body);
       return response.statusCode == 200;
     } catch (e) {
       print(e.toString());

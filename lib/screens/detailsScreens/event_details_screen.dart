@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project/API/events.dart';
 import 'package:flutter_project/models/event.dart';
 
 class EventDetailsScreen extends StatefulWidget {
@@ -18,6 +19,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
   var _greenThumbColor = Colors.green;
   var _redThumbColor = Colors.red;
+
+  EventsApi eventsApi = new EventsApi();
 
   _EventDetailsScreenState({@required this.event}) {
     initUserVotes();
@@ -234,17 +237,20 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                         event.vote = 1;
                         _thumbUpColor = _greenThumbColor;
                         event.userRating += 1;
+                        eventsApi.voteEvent(event.id, 1);
                       } else if (event.vote == -1) {
                         // TO DO: CHANGE VOTE IN DB
                         event.vote = 1;
                         _thumbUpColor = _greenThumbColor;
                         _thumbDownColor = Colors.grey;
                         event.userRating += 2;
+                        eventsApi.voteEvent(event.id, 1);
                       } else if (event.vote == 1) {
                         // TO DO: REMOVE VOTE FROM DB
                         event.vote = 0;
                         _thumbUpColor = Colors.grey;
                         event.userRating -= 1;
+                        eventsApi.deleteVote(event.id);
                       }
                     });
                   })),
@@ -259,21 +265,22 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   onPressed: (() {
                     setState(() {
                       if (event.vote == 0) {
-                        // TO DO: ADD VOTE TO DB
                         event.vote = -1;
                         _thumbDownColor = _redThumbColor;
                         event.userRating -= 1;
+                        eventsApi.voteEvent(event.id, -1);
                       } else if (event.vote == 1) {
-                        // TO DO: CHANGE VOTE IN DB
                         event.vote = -1;
                         _thumbDownColor = _redThumbColor;
                         _thumbUpColor = Colors.grey;
                         event.userRating -= 2;
+                        eventsApi.voteEvent(event.id, -1);
                       } else if (event.vote == -1) {
                         // TO DO: REMOVE VOTE FROM DB
                         event.vote = 0;
                         _thumbDownColor = Colors.grey;
                         event.userRating += 1;
+                        eventsApi.deleteVote(event.id);
                       }
                     });
                   })),
