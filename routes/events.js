@@ -74,9 +74,6 @@ router.post('/vote', auth.authenticateToken, (req, res) => {
     const body = req.body
     const value = body.vote
     const event_id = body.event_id
-    console.log(body.username)
-    console.log(value)
-    console.log(event_id)
     db.getUserIdFromName(body.username).then(function(result){
         if(result != null) {
             var user_id = result.results[0].id;
@@ -90,6 +87,24 @@ router.post('/vote', auth.authenticateToken, (req, res) => {
                 }
             })
 
+        }
+        else {
+            res.sendStatus(400)
+        }
+    })
+});
+
+router.post('/delete/vote', auth.authenticateToken, (req, res) => {
+    body = req.body
+    db.getUserIdFromName(body.username).then(function(result){
+        if(result != null) {
+            var user_id = result.results[0].id;
+            db.deleteUserVote( body.event_id,user_id).then(function(result) {
+                if(result == null) {
+                    return res.sendStatus(400)
+                }
+                return res.sendStatus(200)
+            })
         }
         else {
             res.sendStatus(400)

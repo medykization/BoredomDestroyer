@@ -219,14 +219,28 @@ async function insertVote(event_id, user_id, vote_value) {
     }
 };
 
-exports.insertVote = insertVote
+async function deleteUserVote(event_id, user_id) {
+    const client = await pool.connect();
+    try {
+        const selectQuery = 'DELETE FROM event_votes WHERE user_id = $1 and event_id = $2';
+        await client.query(selectQuery, [user_id, event_id]);
+        client.release();
+        return "values deleted";
+    }catch (err) {
+        client.release();
+        return null;
+    }
+};
+
 exports.deleteOutdatedEvents = deleteOutdatedEvents
 exports.getEventCategoryId = getEventCategoryId
 exports.getUserIdFromName = getUserIdFromName
+exports.deleteUserVote = deleteUserVote
 exports.getLocalEvents = getLocalEvents
 exports.getCategories = getCategories
 exports.insertEvent = insertEvent
 exports.checkEmail = checkEmail
 exports.insertUser = insertUser
+exports.insertVote = insertVote
 exports.checkUser = checkUser
 exports.checkName = checkName
