@@ -11,15 +11,15 @@ class EventsApi {
   static const addEventsURL = "https://boredom-server.herokuapp.com/events/add";
 
   Future<List<Event>> getEventsNearby(String city) async {
-    List<Event> results = [];
-
-    Map cityMap = {'city': city};
-    String body = convert.json.encode(cityMap);
-
     Box box = await Hive.openBox<User>('users');
     User user = await box.get('user');
     String token = user.accessToken;
 
+    String username = user.name;
+    Map bodyMap = {'username': username, 'city': city};
+    String body = convert.json.encode(bodyMap);
+
+    List<Event> results = [];
     try {
       http.Response response = await http.post(getEventsURL,
           headers: <String, String>{
@@ -27,8 +27,6 @@ class EventsApi {
             'Content-Type': 'application/json; charset=UTF-8',
           },
           body: body);
-
-      print(response.statusCode);
 
       if (response.statusCode == 403) {
         await refreshToken(user, box, city);
@@ -46,7 +44,6 @@ class EventsApi {
   Future refreshToken(User user, Box box, String city) async {
     HttpAuth httpAuth = new HttpAuth();
     String accessToken = await httpAuth.refreshToken(user);
-    print(accessToken);
     if (accessToken != null) {
       user.accessToken = accessToken;
       await box.put('user', user);
@@ -64,7 +61,7 @@ class EventsApi {
       'location_address': event.locationAddress,
       'begin_time': event.dateTimeBegin,
       'end_time': event.dateTimeEnd,
-      'rating': event.userRating
+      'rating': event.userRating,
     };
 
     String body = convert.json.encode(eventMap);
