@@ -27,6 +27,14 @@ class _EventPreferencesScreenState extends State<EventPreferencesScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
       resizeToAvoidBottomInset: false,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          print("Selected: ${_filters.join(', ')}");
+          Navigator.pop(context);
+        },
+        child: Icon(Icons.search),
+        backgroundColor: Colors.blueAccent,
+      ),
       appBar: AppBar(
         leading: BackButton(
           onPressed: () {
@@ -34,31 +42,26 @@ class _EventPreferencesScreenState extends State<EventPreferencesScreen> {
           },
         ),
         backgroundColor: Colors.blueAccent,
-        title: Text('Category'),
+        title: Text('Search Events'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _buildLocationRow(),
-              Expanded(
-                flex: 2,
-                child: Container(),
-              ),
-              Wrap(children: categoryWidgets.toList()),
-              Expanded(
-                flex: 1,
-                child: Container(),
-              ),
-              _buildSearchButton()
-            ],
-          ),
+        child: Column(
+          children: [
+            _buildCategoryBar('Location', Icons.place),
+            _buildLocationRow(),
+            SizedBox(height: 15),
+            _buildCategoryBar('Categories', Icons.place),
+            Wrap(children: categoryWidgets.toList()),
+          ],
         ),
       ),
     );
+  }
+
+  _loadCategories() {
+    _categories =
+        eventCategories.getEventCategories().map((e) => e.name).toList();
   }
 
   Iterable<Widget> get categoryWidgets sync* {
@@ -66,7 +69,10 @@ class _EventPreferencesScreenState extends State<EventPreferencesScreen> {
       yield Padding(
         padding: const EdgeInsets.all(6.0),
         child: FilterChip(
+          selectedColor: Colors.blue[200],
+          backgroundColor: Colors.blue[50],
           avatar: CircleAvatar(
+            backgroundColor: Colors.blue[100],
             child: Text(category[0].toUpperCase()),
           ),
           label: Text(category),
@@ -85,28 +91,6 @@ class _EventPreferencesScreenState extends State<EventPreferencesScreen> {
         ),
       );
     }
-  }
-
-  Widget _buildSearchButton() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 50, horizontal: 130),
-      child: ButtonTheme(
-        shape: new RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(10)),
-        minWidth: 500.0,
-        height: 50.0,
-        child: FlatButton(
-          onPressed: () async {
-            print("Selected: ${_filters.join(', ')}");
-          },
-          child: Text(
-            'Search',
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          color: Colors.blueAccent,
-        ),
-      ),
-    );
   }
 
   Widget _buildLocationRow() {
@@ -134,8 +118,24 @@ class _EventPreferencesScreenState extends State<EventPreferencesScreen> {
     );
   }
 
-  _loadCategories() {
-    _categories =
-        eventCategories.getEventCategories().map((e) => e.name).toList();
+  Widget _buildCategoryBar(String categoryName, IconData categoryIcon) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Icon(categoryIcon, color: Colors.blueAccent),
+            SizedBox(width: 8),
+            Text(
+              categoryName,
+              style: TextStyle(
+                  color: Colors.blueAccent,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        Divider(height: 15, thickness: 2),
+      ],
+    );
   }
 }
