@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_project/models/place.dart';
+import 'package:flutter_project/screens/mapScreen.dart';
 
 class PlaceDetailsScreen extends StatefulWidget {
   final Place place;
@@ -19,7 +20,12 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute<bool>(builder: (BuildContext context) {
+              return MapScreen();
+            }));
+          },
           child: Icon(Icons.near_me),
           backgroundColor: Colors.redAccent),
       appBar: AppBar(
