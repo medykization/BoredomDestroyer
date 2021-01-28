@@ -51,7 +51,7 @@ class _EventPreferencesScreenState extends State<EventPreferencesScreen> {
             _buildCategoryBar('Location', Icons.place),
             _buildLocationRow(),
             SizedBox(height: 15),
-            _buildCategoryBar('Categories', Icons.place),
+            _buildCategoryBar('Categories', Icons.category),
             Wrap(children: categoryWidgets.toList()),
           ],
         ),
