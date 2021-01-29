@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/models/place.dart';
 import 'package:flutter_project/screens/mapScreen.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class PlaceDetailsScreen extends StatefulWidget {
   final Place place;
@@ -15,21 +17,27 @@ class PlaceDetailsScreen extends StatefulWidget {
 class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
   final Place place;
   _PlaceDetailsScreenState({@required this.place});
+  Position placePosition;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-          onPressed: () {
+          onPressed: () async {
             Navigator.push(context,
                 MaterialPageRoute<bool>(builder: (BuildContext context) {
-              return MapScreen();
+              return MapScreen(placePosition);
             }));
           },
           child: Icon(Icons.near_me),
-          backgroundColor: Colors.redAccent),
+          backgroundColor: Colors.blueAccent),
       appBar: AppBar(
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Colors.blueAccent,
         title: Text(
           place.name,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -40,7 +48,7 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
         slivers: <Widget>[
           SliverAppBar(
             leading: Text(''),
-            backgroundColor: Colors.redAccent,
+            backgroundColor: Colors.blueAccent,
             expandedHeight: 300,
             flexibleSpace: FlexibleSpaceBar(
               background: FittedBox(
@@ -49,32 +57,148 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
               ),
             ),
           ),
-          SliverFixedExtentList(
-            itemExtent: 50.0,
+          SliverList(
             delegate: SliverChildListDelegate([
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Text(
-                  place.name,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Row(
-                  children: [
-                    Icon(Icons.near_me),
-                    Text('   '),
-                    Text('Distance: ' + place.distance,
-                        style: TextStyle(fontSize: 18))
-                  ],
-                ),
-              ),
+              _buildNameColumn(),
+              _buildLocationColumn(),
+              _buildRatingColumn(),
               //Text(place.location.toString()),
             ]),
           )
         ],
       )),
+    );
+  }
+
+  getPosition() async {
+    Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((position) => () {
+              setState(() {});
+            });
+  }
+
+  Widget _buildNameColumn() {
+    {
+      return Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.place,
+                  color: Colors.blueAccent,
+                ),
+                Text('   '),
+                Text(
+                  'Place',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
+            Divider(
+              color: Colors.grey,
+              height: 30,
+            ),
+            Row(
+              children: [
+                Text(
+                  place.name,
+                  style: TextStyle(fontSize: 18),
+                ),
+              ],
+            ),
+            Divider(
+              height: 20,
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  _buildLocationColumn() {
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.map,
+                color: Colors.blueAccent,
+              ),
+              Text('   '),
+              Text(
+                'Distance',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+          Divider(
+            color: Colors.grey,
+            height: 20,
+          ),
+          Row(
+            children: [
+              Text(
+                place.distance,
+                style: TextStyle(fontSize: 18),
+              ),
+            ],
+          ),
+          Divider(
+            height: 10,
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildRatingColumn() {
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.map,
+                color: Colors.blueAccent,
+              ),
+              Text('   '),
+              Text(
+                'Rating',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+          Divider(
+            color: Colors.grey,
+            height: 20,
+          ),
+          Center(
+            child: RatingBar.builder(
+              initialRating: place.rating,
+              direction: Axis.horizontal,
+              allowHalfRating: true,
+              itemSize: 30,
+              itemCount: 5,
+              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+              itemBuilder: (context, _) => Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              onRatingUpdate: (rating) {
+                print(rating);
+              },
+            ),
+          ),
+          Divider(
+            height: 10,
+          ),
+        ],
+      ),
     );
   }
 }
