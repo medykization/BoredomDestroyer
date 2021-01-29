@@ -32,9 +32,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       floatingActionButton: FloatingActionButton(
           onPressed: () {},
           child: Icon(Icons.near_me),
-          backgroundColor: Colors.redAccent),
+          backgroundColor: Colors.blueAccent),
       appBar: AppBar(
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Colors.blueAccent,
         title: Text(
           event.name,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -45,7 +45,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         slivers: <Widget>[
           SliverAppBar(
             leading: Text(''),
-            backgroundColor: Colors.redAccent,
+            backgroundColor: Colors.blueAccent,
             expandedHeight: 120,
           ),
           SliverList(
@@ -74,7 +74,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             children: [
               Icon(
                 Icons.timer,
-                color: Colors.redAccent,
+                color: Colors.blueAccent,
               ),
               Text('   '),
               Text(
@@ -137,7 +137,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             children: [
               Icon(
                 Icons.map,
-                color: Colors.redAccent,
+                color: Colors.blueAccent,
               ),
               Text('   '),
               Text(
@@ -176,7 +176,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             children: [
               Icon(
                 Icons.info,
-                color: Colors.redAccent,
+                color: Colors.blueAccent,
               ),
               Text('   '),
               Text(
@@ -210,7 +210,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             children: [
               Icon(
                 Icons.rate_review,
-                color: Colors.redAccent,
+                color: Colors.blueAccent,
               ),
               Text('   '),
               Text(
