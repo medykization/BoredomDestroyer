@@ -171,11 +171,11 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
           ),
           Center(
             child: RatingBar.builder(
-              initialRating: place.rating,
+              initialRating: place.rating.toDouble(),
               direction: Axis.horizontal,
               allowHalfRating: true,
-              minRating: place.rating,
-              maxRating: place.rating,
+              minRating: place.rating.toDouble(),
+              maxRating: place.rating.toDouble(),
               itemSize: 28,
               itemCount: 5,
               itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
