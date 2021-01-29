@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -12,10 +13,9 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  _MapScreenState(this._endPosition) {
-    _startPosition = Position(
-        latitude: _endPosition.latitude, longitude: _endPosition.longitude);
-  }
+  bool isRouteMapped = false;
+
+  _MapScreenState(this._endPosition);
   Position _endPosition;
   Position _startPosition;
 
@@ -29,36 +29,26 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-
-    /// origin marker
-    _addMarker(LatLng(_startPosition.latitude, _startPosition.longitude),
-        "origin", BitmapDescriptor.defaultMarker);
-
-    /// destination marker
-    _addMarker(LatLng(_endPosition.latitude, _endPosition.longitude),
-        "destination", BitmapDescriptor.defaultMarkerWithHue(90));
     _getPolyline();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.redAccent,
+      bottomNavigationBar: BottomAppBar(
+        child: new Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            // TO DO: BOTTOM BAR WITH PLACE NAME
+          ],
         ),
-        body: GoogleMap(
-          initialCameraPosition: CameraPosition(
-              target: LatLng(_startPosition.latitude, _startPosition.longitude),
-              zoom: 12),
-          myLocationEnabled: true,
-          tiltGesturesEnabled: true,
-          compassEnabled: true,
-          scrollGesturesEnabled: true,
-          zoomGesturesEnabled: true,
-          onMapCreated: _onMapCreated,
-          markers: Set<Marker>.of(markers.values),
-          polylines: Set<Polyline>.of(polylines.values),
-        ));
+      ),
+      appBar: AppBar(
+        backgroundColor: Colors.redAccent,
+      ),
+      body: isRouteMapped == false ? _buildSpinkit() : _buildMap(),
+    );
   }
 
   void _onMapCreated(GoogleMapController controller) async {
@@ -77,21 +67,77 @@ class _MapScreenState extends State<MapScreen> {
     Polyline polyline = Polyline(
         polylineId: id, color: Colors.red, points: polylineCoordinates);
     polylines[id] = polyline;
-    setState(() {});
+    setState(() {
+      isRouteMapped = true;
+    });
   }
 
   _getPolyline() async {
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      googleAPiKey,
-      PointLatLng(_startPosition.latitude, _startPosition.longitude),
-      PointLatLng(_endPosition.latitude, _endPosition.longitude),
-      travelMode: TravelMode.driving,
-    );
-    if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) {
-        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-      });
-    }
-    _addPolyLine();
+    _getStartPosition().then((value) async {
+      _addMarker(LatLng(_endPosition.latitude, _endPosition.longitude),
+          "destination", BitmapDescriptor.defaultMarker);
+
+      _addMarker(LatLng(_startPosition.latitude, _startPosition.longitude),
+          "origin", BitmapDescriptor.defaultMarkerWithHue(90));
+
+      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+        googleAPiKey,
+        PointLatLng(_startPosition.latitude, _startPosition.longitude),
+        PointLatLng(_endPosition.latitude, _endPosition.longitude),
+        travelMode: TravelMode.driving,
+      );
+
+      if (result.points.isNotEmpty) {
+        result.points.forEach((PointLatLng point) {
+          polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+        });
+      }
+      _addPolyLine();
+    });
   }
+
+  Future<void> _getStartPosition() async {
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((value) {
+      if (value == null) {
+        _startPosition = Position(
+            latitude: _endPosition.latitude, longitude: _endPosition.longitude);
+      } else {
+        _startPosition = value;
+      }
+    });
+  }
+
+  Widget _buildMap() {
+    return GoogleMap(
+      initialCameraPosition: CameraPosition(
+          target: LatLng(_startPosition.latitude, _startPosition.longitude),
+          zoom: 16),
+      myLocationEnabled: true,
+      tiltGesturesEnabled: true,
+      compassEnabled: true,
+      scrollGesturesEnabled: true,
+      zoomGesturesEnabled: true,
+      onMapCreated: _onMapCreated,
+      markers: Set<Marker>.of(markers.values),
+      polylines: Set<Polyline>.of(polylines.values),
+    );
+  }
+}
+
+const spinkit = SpinKitCircle(
+  color: Colors.redAccent,
+  size: 50.0,
+);
+
+Widget _buildSpinkit() {
+  return Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        spinkit,
+        Text('Route mapping'),
+      ],
+    ),
+  );
 }
