@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_project/models/place.dart';
 import 'package:flutter_project/screens/mapScreen.dart';
@@ -17,7 +15,6 @@ class PlaceDetailsScreen extends StatefulWidget {
 class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
   final Place place;
   _PlaceDetailsScreenState({@required this.place});
-  Position placePosition;
 
   @override
   void initState() {
@@ -31,7 +28,8 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
           onPressed: () async {
             Navigator.push(context,
                 MaterialPageRoute<bool>(builder: (BuildContext context) {
-              return MapScreen(placePosition);
+              return MapScreen(new Position(
+                  latitude: place.location.lat, longitude: place.location.lng));
             }));
           },
           child: Icon(Icons.near_me),
@@ -98,7 +96,7 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
             ),
             Divider(
               color: Colors.grey,
-              height: 30,
+              height: 20,
             ),
             Row(
               children: [
@@ -107,9 +105,6 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
                   style: TextStyle(fontSize: 18),
                 ),
               ],
-            ),
-            Divider(
-              height: 20,
             ),
           ],
         ),
@@ -147,9 +142,6 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
               ),
             ],
           ),
-          Divider(
-            height: 10,
-          ),
         ],
       ),
     );
@@ -163,7 +155,7 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
           Row(
             children: [
               Icon(
-                Icons.map,
+                Icons.star_rate,
                 color: Colors.blueAccent,
               ),
               Text('   '),
@@ -182,20 +174,17 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
               initialRating: place.rating,
               direction: Axis.horizontal,
               allowHalfRating: true,
-              itemSize: 30,
+              minRating: place.rating,
+              maxRating: place.rating,
+              itemSize: 28,
               itemCount: 5,
               itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
               itemBuilder: (context, _) => Icon(
                 Icons.star,
                 color: Colors.amber,
               ),
-              onRatingUpdate: (rating) {
-                print(rating);
-              },
+              onRatingUpdate: (double value) {},
             ),
-          ),
-          Divider(
-            height: 10,
           ),
         ],
       ),
