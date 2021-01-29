@@ -45,8 +45,9 @@ class _EventPreferencesScreenState extends State<EventPreferencesScreen> {
           print("Selected: ${filters.join(', ')}");
           Box box = await Hive.openBox("events");
           await box.put('category', filters);
-          if (inputEventLocationCity != currentCity)
-            await box.put('city', 'Łódź');
+          if (inputEventLocationCity != currentCity) {
+            await box.put('city', inputEventLocationCity);
+          }
           widget.reloadData();
           Navigator.pop(context);
         },

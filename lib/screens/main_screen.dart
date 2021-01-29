@@ -325,7 +325,7 @@ class _MainScreenState extends State<MainScreen> {
             onTap: () => Navigator.push(context,
                 MaterialPageRoute<bool>(builder: (BuildContext context) {
               return (EventPreferencesScreen(
-                  reloadData: loadEvents,
+                  reloadData: reloadEvents,
                   city: city,
                   catrgories: eventCategory));
             })),
