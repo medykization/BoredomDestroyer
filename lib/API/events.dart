@@ -21,6 +21,7 @@ class EventsApi {
 
     String username = user.name;
     Map bodyMap = {'username': username, 'city': city};
+    print(bodyMap);
     String body = convert.json.encode(bodyMap);
 
     List<Event> results = [];

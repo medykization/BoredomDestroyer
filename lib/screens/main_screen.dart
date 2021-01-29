@@ -20,6 +20,16 @@ import 'detailsScreens/event_details_screen.dart';
 import 'detailsScreens/place_details_screen.dart';
 
 class MainScreen extends StatefulWidget {
+  final double currentRange;
+  final List<String> currentPreferences;
+  final String currentCity;
+  final List<String> currentCatrgories;
+  MainScreen(
+      {Key key,
+      this.currentRange,
+      this.currentPreferences,
+      this.currentCity,
+      this.currentCatrgories});
   @override
   _MainScreenState createState() => _MainScreenState();
 }
@@ -28,7 +38,9 @@ bool isLoadedPlaces = false;
 bool isLoadedEvents = false;
 
 Timer timer;
+
 double range;
+String city;
 
 List<Place> places;
 List<Event> events;
@@ -41,14 +53,12 @@ List<String> eventCategory;
 EventCategories eventCategories = new EventCategories();
 Box placesBox;
 Box eventsBox;
-String city;
 
 class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    loadPlacesPreferences();
-    loadEventPreferences();
+    initValues();
     loadPlaces();
     loadEvents();
     setTimer();
@@ -58,6 +68,13 @@ class _MainScreenState extends State<MainScreen> {
   void dispose() {
     timer.cancel();
     super.dispose();
+  }
+
+  initValues() {
+    range = widget.currentRange;
+    city = widget.currentCity;
+    placesPreferences = widget.currentPreferences.toSet();
+    eventCategory = widget.currentCatrgories;
   }
 
   setTimer() {
@@ -93,7 +110,7 @@ class _MainScreenState extends State<MainScreen> {
     city = await eventsBox.get('city');
     if (city == null) {
       city = "Łódź";
-      await eventsBox.put('city', 'Łódź');
+      await eventsBox.put('city', "Łódź");
     }
     print(eventCategory);
     print(city);

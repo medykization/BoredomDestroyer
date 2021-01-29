@@ -37,6 +37,12 @@ class _AppState extends State<Application> {
   bool isLogged = false;
   HttpAuth auth = new HttpAuth();
 
+  Set<String> placesPreferences;
+  List<String> eventCategory;
+
+  double range;
+  String city;
+
   Future<void> initDataStorage() async {
     await Hive.initFlutter();
     Hive.registerAdapter(UserAdapter());
@@ -44,6 +50,8 @@ class _AppState extends State<Application> {
 
   Future<void> checkDataStorageForUserCredentials() async {
     await initDataStorage();
+    await loadPlacesPreferences();
+    await loadEventPreferences();
     Box box = await Hive.openBox<User>('users');
     User user = await box.get('user');
     if (user != null) {
@@ -53,6 +61,34 @@ class _AppState extends State<Application> {
         await box.put('user', user);
         isLogged = true;
       }
+    }
+  }
+
+  Future<void> loadPlacesPreferences() async {
+    Box placesBox = await Hive.openBox("places");
+    placesPreferences = (await placesBox.get('preferences') as List).toSet();
+    if (placesPreferences == null) {
+      placesPreferences = {"restaurant"};
+      await placesBox.put('preferences', ["restaurant"]);
+    }
+    range = (await placesBox.get('range') as int).toDouble();
+    if (range == null) {
+      await placesBox.put('range', 500.0);
+      range = 500;
+    }
+  }
+
+  Future<void> loadEventPreferences() async {
+    Box eventsBox = await Hive.openBox("events");
+    eventCategory = await eventsBox.get('category');
+    if (eventCategory == null) {
+      eventCategory = ["party"];
+      await eventsBox.put('category', ["party"]);
+    }
+    city = await eventsBox.get('city');
+    if (city == null) {
+      city = "Łódź";
+      await eventsBox.put('city', "Łódź");
     }
   }
 
@@ -78,7 +114,11 @@ class _AppState extends State<Application> {
               if (!isLogged) {
                 return LoginScreen();
               } else
-                return MainScreen();
+                return MainScreen(
+                    currentCatrgories: eventCategory,
+                    currentCity: city,
+                    currentRange: range,
+                    currentPreferences: placesPreferences.toList());
             },
           ),
         );
