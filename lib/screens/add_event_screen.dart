@@ -295,7 +295,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
               userRating: 0,
             );
             eventsApi.addEvent(event).then((value) => {
-                  if (!value) {Navigator.pop(context)}
+                  if (value) {Navigator.pop(context)}
                 });
           }
         },
