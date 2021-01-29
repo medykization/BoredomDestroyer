@@ -1,24 +1,35 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_project/API/places.dart';
 import 'package:flutter_project/models/place_category.dart';
+import 'package:hive/hive.dart';
 
 class PreferencesScreen extends StatefulWidget {
+  final Function reloadData;
+  final double range;
+  final List<String> preferences;
+  PreferencesScreen({Key key, this.reloadData, this.range, this.preferences})
+      : super(key: key);
   @override
   _PreferencesScreenState createState() => _PreferencesScreenState();
 }
 
-PlacesApi placesApi = new PlacesApi();
 PlaceCategories placeCategories;
-List<String> _filters;
-double _sliderRange = 1000;
+List<String> filters = [];
+double sliderRange = 500;
+Box box;
 
 class _PreferencesScreenState extends State<PreferencesScreen> {
   @override
   void initState() {
     super.initState();
-    _filters = <String>[];
+    initValues();
+    sliderRange = widget.range;
+    filters = widget.preferences;
     placeCategories = new PlaceCategories();
+  }
+
+  Future<void> initValues() async {
+    box = await Hive.openBox("places");
   }
 
   @override
@@ -43,7 +54,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: Text(
-                _sliderRange.round().toString() + " m",
+                sliderRange.round().toString() + " m",
                 style: TextStyle(fontSize: 18, color: Colors.grey[800]),
               ),
             ),
@@ -52,11 +63,11 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                 inactiveColor: Colors.blue[50],
                 divisions: 4,
                 min: 500,
-                value: _sliderRange,
+                value: sliderRange,
                 max: 2500,
                 onChanged: (double value) {
                   setState(() {
-                    _sliderRange = value;
+                    sliderRange = value;
                   });
                 }),
             SizedBox(height: 10),
@@ -67,8 +78,10 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print("Selected: ${_filters.join(', ')}");
+        onPressed: () async {
+          await box.put('preferences', filters.toList());
+          await box.put('range', sliderRange.toInt());
+          widget.reloadData();
           Navigator.pop(context);
         },
         child: Icon(Icons.search),
@@ -89,13 +102,13 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
             child: Text(category.toString()[0].toUpperCase()),
           ),
           label: Text(toLabel(category.toString())),
-          selected: _filters.contains(category.toString()),
+          selected: filters.contains(category.toString()),
           onSelected: (bool selected) {
             setState(() {
               if (selected) {
-                _filters.add(category.toString());
+                filters.add(category.toString());
               } else {
-                _filters.removeWhere((String name) {
+                filters.removeWhere((String name) {
                   return name == category.toString();
                 });
               }

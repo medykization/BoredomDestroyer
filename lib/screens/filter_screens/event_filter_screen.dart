@@ -1,26 +1,39 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/models/event_category.dart';
+import 'package:hive/hive.dart';
 import 'package:search_map_place/search_map_place.dart';
 
 class EventPreferencesScreen extends StatefulWidget {
+  final Function reloadData;
+  final String city;
+  final List<String> catrgories;
+  EventPreferencesScreen(
+      {Key key, this.reloadData, this.city, this.catrgories});
   @override
   _EventPreferencesScreenState createState() => _EventPreferencesScreenState();
 }
 
 EventCategories eventCategories = new EventCategories();
-List<String> _categories;
-List<String> _filters;
-String _apiKey = "AIzaSyDuNDK_ogM5AnrMqawuqZQYzDVXkVnE45I";
+List<String> categories;
+List<String> filters;
+String currentCity;
+String apiKey = "AIzaSyDuNDK_ogM5AnrMqawuqZQYzDVXkVnE45I";
 String inputEventLocationCity;
 
 class _EventPreferencesScreenState extends State<EventPreferencesScreen> {
   @override
   void initState() {
     super.initState();
-    _filters = <String>[];
-    _loadCategories();
-    print(_categories);
+    filters = widget.catrgories;
+    currentCity = widget.city;
+    loadCategories();
+    print(categories);
+  }
+
+  loadCategories() {
+    categories =
+        eventCategories.getEventCategories().map((e) => e.name).toList();
   }
 
   @override
@@ -28,8 +41,13 @@ class _EventPreferencesScreenState extends State<EventPreferencesScreen> {
     return new Scaffold(
       resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print("Selected: ${_filters.join(', ')}");
+        onPressed: () async {
+          print("Selected: ${filters.join(', ')}");
+          Box box = await Hive.openBox("events");
+          await box.put('category', filters);
+          if (inputEventLocationCity != currentCity)
+            await box.put('city', 'Łódź');
+          widget.reloadData();
           Navigator.pop(context);
         },
         child: Icon(Icons.search),
@@ -59,13 +77,8 @@ class _EventPreferencesScreenState extends State<EventPreferencesScreen> {
     );
   }
 
-  _loadCategories() {
-    _categories =
-        eventCategories.getEventCategories().map((e) => e.name).toList();
-  }
-
   Iterable<Widget> get categoryWidgets sync* {
-    for (String category in _categories) {
+    for (String category in categories) {
       yield Padding(
         padding: const EdgeInsets.all(6.0),
         child: FilterChip(
@@ -76,13 +89,13 @@ class _EventPreferencesScreenState extends State<EventPreferencesScreen> {
             child: Text(category[0].toUpperCase()),
           ),
           label: Text(category),
-          selected: _filters.contains(category),
+          selected: filters.contains(category),
           onSelected: (bool selected) {
             setState(() {
               if (selected) {
-                _filters.add(category);
+                filters.add(category);
               } else {
-                _filters.removeWhere((String name) {
+                filters.removeWhere((String name) {
                   return name == category;
                 });
               }
@@ -100,9 +113,9 @@ class _EventPreferencesScreenState extends State<EventPreferencesScreen> {
         iconColor: Colors.blueAccent.shade100,
         hasClearButton: true,
         placeType: PlaceType.address,
-        placeholder: 'City',
+        placeholder: currentCity,
         language: 'pl',
-        apiKey: _apiKey,
+        apiKey: apiKey,
         onSelected: (Place place) {
           List<String> splitted = place.description.split(", ");
           if (splitted.length == 0) {

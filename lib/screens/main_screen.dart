@@ -14,6 +14,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_project/API/places.dart';
+import 'package:hive/hive.dart';
 
 import 'detailsScreens/event_details_screen.dart';
 import 'detailsScreens/place_details_screen.dart';
@@ -26,7 +27,8 @@ class MainScreen extends StatefulWidget {
 bool isLoadedPlaces = false;
 bool isLoadedEvents = false;
 
-Timer _timer;
+Timer timer;
+double range;
 
 List<Place> places;
 List<Event> events;
@@ -34,43 +36,88 @@ List<Event> events;
 PlacesApi placesApi = new PlacesApi();
 EventsApi eventsApi = new EventsApi();
 
-Set<String> preferences = {
-  "restaurant",
-  //"cafe",
-};
+Set<String> placesPreferences;
+List<String> eventCategory;
 EventCategories eventCategories = new EventCategories();
+Box placesBox;
+Box eventsBox;
+String city;
 
 class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
-    _loadPlaces();
-    _loadEvents();
-    setTimer();
     super.initState();
+    loadPlacesPreferences();
+    loadEventPreferences();
+    loadPlaces();
+    loadEvents();
+    setTimer();
   }
 
   @override
   void dispose() {
-    _timer.cancel();
+    timer.cancel();
     super.dispose();
   }
 
   setTimer() {
-    _timer = new Timer.periodic(Duration(minutes: 1), (timer) {
+    timer = new Timer.periodic(Duration(minutes: 1), (timer) {
       if (this.mounted) {
-        _loadPlaces();
-        _loadEvents();
+        loadPlaces();
+        loadEvents();
       }
     });
   }
 
-  Future<void> _loadPlaces() async {
+  Future<void> loadPlacesPreferences() async {
+    placesBox = await Hive.openBox("places");
+    placesPreferences = (await placesBox.get('preferences') as List).toSet();
+    if (placesPreferences == null) {
+      placesPreferences = {"restaurant"};
+      await placesBox.put('preferences', ["restaurant"]);
+    }
+    range = (await placesBox.get('range') as int).toDouble();
+    if (range == null) {
+      await placesBox.put('range', 500.0);
+      range = 500;
+    }
+  }
+
+  Future<void> loadEventPreferences() async {
+    eventsBox = await Hive.openBox("events");
+    eventCategory = await eventsBox.get('category');
+    if (eventCategory == null) {
+      eventCategory = ["party"];
+      await eventsBox.put('category', ["party"]);
+    }
+    city = await eventsBox.get('city');
+    if (city == null) {
+      city = "Łódź";
+      await eventsBox.put('city', 'Łódź');
+    }
+    print(eventCategory);
+    print(city);
+  }
+
+  reloadEvents() async {
+    await loadEventPreferences();
+    await loadEvents();
+  }
+
+  reloadPlaces() async {
+    await loadPlacesPreferences();
+    await loadPlaces();
+  }
+
+  Future<void> loadPlaces() async {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     if (position != null) {
       await placesApi
-          .getNearbyPlaces(2000,
-              new Location(position.latitude, position.longitude), preferences)
+          .getNearbyPlaces(
+              range.toInt(),
+              new Location(position.latitude, position.longitude),
+              placesPreferences)
           .then((val) => {
                 if (this.mounted)
                   {
@@ -85,8 +132,7 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  Future<void> _loadEvents() async {
-    String city = "Łódź"; // TEST
+  Future<void> loadEvents() async {
     if (city != null) {
       await eventsApi.getEventsNearby(city).then((val) => {
             if (this.mounted)
@@ -145,7 +191,7 @@ class _MainScreenState extends State<MainScreen> {
   Scaffold _buildPlacesView(String choice) {
     return new Scaffold(
       body: RefreshIndicator(
-        onRefresh: _loadPlaces,
+        onRefresh: loadPlaces,
         child: ListView.builder(
             itemExtent: 120,
             itemCount: places.length,
@@ -160,7 +206,7 @@ class _MainScreenState extends State<MainScreen> {
                           builder: (BuildContext context) {
                         return (PlaceDetailsScreen(
                           place: places[index],
-                        )); // Place Details onTap
+                        ));
                       }));
                     },
                     child: Card(
@@ -189,7 +235,11 @@ class _MainScreenState extends State<MainScreen> {
         onPressed: () {
           Navigator.push(context,
               MaterialPageRoute<bool>(builder: (BuildContext context) {
-            return (PreferencesScreen());
+            return (PreferencesScreen(
+              reloadData: reloadPlaces,
+              range: range,
+              preferences: placesPreferences.toList(),
+            ));
           }));
         },
         child: Icon(Icons.search),
@@ -201,7 +251,7 @@ class _MainScreenState extends State<MainScreen> {
   Scaffold _buildEventsView(String choice) {
     return new Scaffold(
       body: RefreshIndicator(
-        onRefresh: _loadEvents,
+        onRefresh: loadEvents,
         child: ListView.builder(
             itemExtent: 120,
             itemCount: events.length,
@@ -257,7 +307,10 @@ class _MainScreenState extends State<MainScreen> {
             backgroundColor: Colors.blueAccent,
             onTap: () => Navigator.push(context,
                 MaterialPageRoute<bool>(builder: (BuildContext context) {
-              return (EventPreferencesScreen());
+              return (EventPreferencesScreen(
+                  reloadData: loadEvents,
+                  city: city,
+                  catrgories: eventCategory));
             })),
           ),
           SpeedDialChild(

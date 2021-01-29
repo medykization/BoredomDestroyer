@@ -1,3 +1,4 @@
+import 'package:google_maps_webservice/geolocation.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_maps_webservice/distance.dart';
 import 'package:flutter_project/models/place.dart';
@@ -39,9 +40,11 @@ class PlacesApi {
               }
 
               Place place = new Place(
+                  id: next.placeId,
                   name: next.name,
                   icon: photo,
-                  location: next.geometry.location);
+                  location: next.geometry.location,
+                  rating: next.rating != null ? next.rating : 0);
 
               //destination varible to distance request
               List<Location> destination = [];
