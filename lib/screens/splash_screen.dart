@@ -19,30 +19,12 @@ class SplashScreen extends StatelessWidget {
               ),
               Center(
                 child: new Text(
-                  'Boredom',
+                  'GoodTime',
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
-                    fontSize: 40,
+                    fontSize: 35,
                     fontFamily: 'Pacifico',
-                    color: Colors.white70,
-                    shadows: <Shadow>[
-                      Shadow(
-                        offset: Offset(5.0, 5.0),
-                        blurRadius: 8.0,
-                        color: Colors.black26,
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Center(
-                child: new Text(
-                  'Destroyer',
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontSize: 40,
-                    fontFamily: 'Pacifico',
-                    color: Colors.white70,
+                    color: Colors.grey[200],
                     shadows: <Shadow>[
                       Shadow(
                         offset: Offset(5.0, 5.0),
